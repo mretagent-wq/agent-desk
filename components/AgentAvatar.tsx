@@ -113,6 +113,11 @@ const MARKS: Record<string, ReactNode> = {
   ),
 };
 
+/** True when this agent has its own drawn mark. */
+export function hasMark(id: string | null | undefined): boolean {
+  return Boolean(id && MARKS[id]);
+}
+
 /** Tile colours by team, all from the beach palette. */
 const TILES: Record<string, [string, string]> = {
   command: ["#1d6f80", "#0b2e3c"],

@@ -1,0 +1,887 @@
+{
+ "version": "v3",
+ "updated": "2026-11-20",
+ "departments": [
+  {
+   "id": "leadership",
+   "name": "Leadership",
+   "head": null,
+   "stage": ""
+  },
+  {
+   "id": "marketing",
+   "name": "Marketing",
+   "head": "strategist",
+   "stage": "Stage 1"
+  },
+  {
+   "id": "leaddev",
+   "name": "Lead Development",
+   "head": "ldm",
+   "stage": "Stages 2 to 5"
+  },
+  {
+   "id": "buyer",
+   "name": "Buyer Desk",
+   "head": "dans_desk",
+   "stage": "Stage 6"
+  },
+  {
+   "id": "transactions",
+   "name": "Transactions",
+   "head": "tc",
+   "stage": "Stage 7"
+  },
+  {
+   "id": "clientcare",
+   "name": "Client Care",
+   "head": "cx_lead",
+   "stage": "After contract"
+  },
+  {
+   "id": "ops",
+   "name": "Operations and IT",
+   "head": "nick",
+   "stage": "Support"
+  },
+  {
+   "id": "people",
+   "name": "People and Quality",
+   "head": "hiring_manager",
+   "stage": "Support"
+  },
+  {
+   "id": "finance",
+   "name": "Finance",
+   "head": "finance_lead",
+   "stage": "Support"
+  },
+  {
+   "id": "compliance",
+   "name": "Compliance and Risk",
+   "head": "dan",
+   "stage": "Guards every stage"
+  },
+  {
+   "id": "partnerships",
+   "name": "Partnerships",
+   "head": "dan",
+   "stage": "Stages 1 and 6"
+  }
+ ],
+ "roles": [
+  {
+   "id": "dan",
+   "title": "Principal and closer",
+   "dept": "leadership",
+   "type": "person",
+   "status": "person",
+   "does": "Consults, tours, negotiates, reserves and closes. Approves every message to a buyer.",
+   "reportsTo": [],
+   "handsTo": [
+    "tc"
+   ],
+   "name": "Dan",
+   "owner": "Dan",
+   "more": "Also the team's licensee for advertising (to confirm) and owner of developer relationships, so he leads Compliance and Partnerships too."
+  },
+  {
+   "id": "nick",
+   "title": "COO, operations and AI",
+   "dept": "leadership",
+   "type": "person",
+   "status": "person",
+   "does": "Builds and runs the agent team. Approves posts, hires and fixes.",
+   "reportsTo": [],
+   "handsTo": [
+    "jarvis"
+   ],
+   "name": "Nick",
+   "owner": "Nick",
+   "more": "Leads Operations and IT directly. Holds the post gate with Dan and the hire gate alone."
+  },
+  {
+   "id": "jarvis",
+   "title": "Chief of staff",
+   "dept": "leadership",
+   "type": "agent",
+   "status": "planned",
+   "does": "The one agent you talk to. Routes each ask to the right department head, tracks it and reports back.",
+   "reportsTo": [
+    "dan",
+    "nick"
+   ],
+   "handsTo": [
+    "strategist",
+    "ldm",
+    "dans_desk",
+    "tc",
+    "cx_lead",
+    "hiring_manager",
+    "finance_lead",
+    "compliance_gate",
+    "dev_registration",
+    "integration_monitor"
+   ],
+   "name": "Jarvis",
+   "owner": "Nick",
+   "schedule": "On demand, by voice or chat",
+   "inputs": "Your voice or chat requests, every department's status",
+   "approval": "Holds anything outward until the right person says yes",
+   "more": "Team Brain, the live voice agent, becomes Jarvis's voice, so there is one front door. Dan can still talk to Dan's Desk directly."
+  },
+  {
+   "id": "strategist",
+   "title": "Marketing Strategist",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "live",
+   "does": "Monthly plan, weekly briefs, reads results.",
+   "reportsTo": [
+    "jarvis"
+   ],
+   "handsTo": [
+    "platform"
+   ],
+   "head": true,
+   "n8n": "x1UKbOROpIYc2gIz",
+   "owner": "Nick",
+   "schedule": "Monthly plan on the 1st at 9 AM, weekly briefs",
+   "group": "Content"
+  },
+  {
+   "id": "platform",
+   "title": "Platform Strategist",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "live",
+   "does": "Instagram spec for each brief: format, length, slot, hook, hashtags.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [
+    "copywriter"
+   ],
+   "n8n": "TL4kEEJ6sCpEe5om",
+   "owner": "Nick",
+   "schedule": "Per brief",
+   "group": "Content"
+  },
+  {
+   "id": "copywriter",
+   "title": "Copywriter",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "live",
+   "does": "Hooks, captions, call to action and the claim list, in Dan's voice.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [
+    "content"
+   ],
+   "n8n": "v0PiA0gSXIz2vA8m",
+   "owner": "Nick",
+   "schedule": "Per brief",
+   "group": "Content"
+  },
+  {
+   "id": "content",
+   "title": "Content Creator",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "live",
+   "does": "Cuts Reels from Dan's Dropbox footage, with price and milestone checks.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [
+    "sound"
+   ],
+   "n8n": "10dJtM9xXNJyF7Xy",
+   "owner": "Nick",
+   "schedule": "Per brief",
+   "group": "Content"
+  },
+  {
+   "id": "sound",
+   "title": "Sound Designer",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "live",
+   "does": "Audio plan for each cut: mood, tempo, beats against the edit.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [
+    "editor"
+   ],
+   "n8n": "bvLb8cj9tdZOwzGC",
+   "owner": "Nick",
+   "schedule": "Per cut",
+   "group": "Content"
+  },
+  {
+   "id": "editor",
+   "title": "Editor",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "live",
+   "does": "Checks claims, brand and fair housing. Two rounds, then flags Nick.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [
+    "poster"
+   ],
+   "n8n": "zGxGyliQXwwodOO2",
+   "owner": "Nick",
+   "schedule": "Per cut",
+   "group": "Content",
+   "approval": "Sends approved pieces to the post gate (Nick and Dan)"
+  },
+  {
+   "id": "poster",
+   "title": "Poster",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "live",
+   "does": "Schedules posts Nick and Dan approved. Posting is on hold.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [
+    "performance"
+   ],
+   "n8n": "ymtbfCusbQV2L7st",
+   "owner": "Nick",
+   "schedule": "After both approvals",
+   "group": "Content",
+   "approval": "Nothing posts without Nick and Dan. On hold until Nick lifts it."
+  },
+  {
+   "id": "performance",
+   "title": "Performance Analyst",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "planned",
+   "does": "Reads post and ad results, says what to keep, change or stop.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [
+    "strategist"
+   ],
+   "owner": "Nick",
+   "schedule": "Weekly",
+   "group": "Content"
+  },
+  {
+   "id": "seo",
+   "title": "SEO and Website Agent",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "outside",
+   "does": "Watches Dan's sites and ranks fixes. Never changes a site.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [
+    "blog_writer"
+   ],
+   "n8n": "DQTeX0zXZXN382n9",
+   "owner": "Sehab",
+   "group": "Web and ads",
+   "more": "Sehab already runs one; it is to be migrated in, not rebuilt."
+  },
+  {
+   "id": "blog_writer",
+   "title": "Blog and Website Writer",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "hire",
+   "does": "Project pages and blog posts with embedded Reels and dated prices.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [
+    "intake_router"
+   ],
+   "owner": "Sehab",
+   "group": "Web and ads"
+  },
+  {
+   "id": "community",
+   "title": "Community Manager",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "hire",
+   "does": "Reads comments and DMs, drafts replies, sends real inquiries to capture.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [
+    "intake_router"
+   ],
+   "owner": "Nick",
+   "group": "Web and ads",
+   "approval": "Replies are drafts until approved"
+  },
+  {
+   "id": "ads_manager",
+   "title": "Ads Manager",
+   "dept": "marketing",
+   "type": "person",
+   "status": "person",
+   "does": "Runs Meta ads and applies approved changes.",
+   "reportsTo": [
+    "dan",
+    "nick"
+   ],
+   "handsTo": [
+    "intake_router"
+   ],
+   "name": "Sehab",
+   "owner": "Sehab",
+   "group": "Web and ads"
+  },
+  {
+   "id": "ads_analyst",
+   "title": "Ads Analyst",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "planned",
+   "does": "Explains what works and what burns money, drafts ad copy. Never edits ads.",
+   "reportsTo": [
+    "ads_manager"
+   ],
+   "handsTo": [
+    "ads_manager"
+   ],
+   "owner": "Sehab",
+   "schedule": "Weekly",
+   "group": "Web and ads"
+  },
+  {
+   "id": "lead_signal",
+   "title": "Lead Quality Signal",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "hire",
+   "does": "Sends qualified and not-qualified results back to Meta so ads find more of the right buyers.",
+   "reportsTo": [
+    "ads_manager"
+   ],
+   "handsTo": [
+    "ads_manager"
+   ],
+   "owner": "Sehab",
+   "group": "Web and ads"
+  },
+  {
+   "id": "ldm",
+   "title": "Lead Development Manager",
+   "dept": "leaddev",
+   "type": "agent",
+   "status": "hire",
+   "does": "Runs stages 2 to 5, keeps Follow Up Boss current, watches reply speed and conversion.",
+   "reportsTo": [
+    "jarvis"
+   ],
+   "handsTo": [
+    "dans_desk"
+   ],
+   "head": true,
+   "owner": "Dan",
+   "more": "This is the inside sales team on a human real estate team: it answers, vets and nurtures, and hands Dan only buyers ready to meet."
+  },
+  {
+   "id": "intake_router",
+   "title": "Lead Intake Router",
+   "dept": "leaddev",
+   "type": "agent",
+   "status": "hire",
+   "does": "Puts every form, DM, call and ad lead into Follow Up Boss, dedupes it and tags its source.",
+   "reportsTo": [
+    "ldm"
+   ],
+   "handsTo": [
+    "researcher"
+   ],
+   "owner": "Dan",
+   "schedule": "Every new lead"
+  },
+  {
+   "id": "james",
+   "title": "Phone agent James",
+   "dept": "leaddev",
+   "type": "agent",
+   "status": "outside",
+   "does": "Answers and makes calls in GoHighLevel, collects details, logs calls.",
+   "reportsTo": [
+    "ldm"
+   ],
+   "handsTo": [
+    "intake_router"
+   ],
+   "owner": "Dan",
+   "more": "Lives in GoHighLevel, outside n8n."
+  },
+  {
+   "id": "researcher",
+   "title": "Lead Researcher",
+   "dept": "leaddev",
+   "type": "agent",
+   "status": "planned",
+   "does": "Finds the real person and judges money, fit and seriousness.",
+   "reportsTo": [
+    "ldm"
+   ],
+   "handsTo": [
+    "qualifier"
+   ],
+   "owner": "Dan",
+   "more": "The Oct 28 Follow Up Boss vetting workflow becomes this role's tool."
+  },
+  {
+   "id": "qualifier",
+   "title": "Buyer Intake and Qualifier",
+   "dept": "leaddev",
+   "type": "agent",
+   "status": "draft",
+   "does": "Budget, timeline, deposit cash, financing, residency and wants. Saves the buyer profile.",
+   "reportsTo": [
+    "ldm"
+   ],
+   "handsTo": [
+    "nurture"
+   ],
+   "n8n": "Abr4WklUtjgnLp9h",
+   "owner": "Dan"
+  },
+  {
+   "id": "nurture",
+   "title": "Nurture Specialist",
+   "dept": "leaddev",
+   "type": "agent",
+   "status": "planned",
+   "does": "Decides who gets which touch and when, and moves buyers toward a meeting.",
+   "reportsTo": [
+    "ldm"
+   ],
+   "handsTo": [
+    "followup",
+    "appointment"
+   ],
+   "owner": "Dan"
+  },
+  {
+   "id": "followup",
+   "title": "Buyer Follow-up Writer",
+   "dept": "leaddev",
+   "type": "agent",
+   "status": "draft",
+   "does": "Drafts texts and emails in Dan's voice. Never sends.",
+   "reportsTo": [
+    "ldm"
+   ],
+   "handsTo": [
+    "dan"
+   ],
+   "n8n": "gX4VnGPwaKif26FH",
+   "owner": "Dan",
+   "approval": "Every message to a buyer waits for Dan"
+  },
+  {
+   "id": "appointment",
+   "title": "Appointment Setter",
+   "dept": "leaddev",
+   "type": "agent",
+   "status": "hire",
+   "does": "Books the consult on Dan's calendar and sends him the briefing.",
+   "reportsTo": [
+    "ldm"
+   ],
+   "handsTo": [
+    "dans_desk"
+   ],
+   "owner": "Dan"
+  },
+  {
+   "id": "dans_desk",
+   "title": "Dan's Desk",
+   "dept": "buyer",
+   "type": "agent",
+   "status": "draft",
+   "does": "Dan's voice and chat desk. Delegates to specialists, changes Follow Up Boss only after a read-back and yes.",
+   "reportsTo": [
+    "jarvis"
+   ],
+   "handsTo": [
+    "portfolio",
+    "market",
+    "showing",
+    "investor"
+   ],
+   "head": true,
+   "n8n": "VSvsI4GOpYQlCBtL",
+   "owner": "Dan",
+   "schedule": "On demand",
+   "approval": "Every Follow Up Boss change is read back and needs Dan's or Nick's yes"
+  },
+  {
+   "id": "portfolio",
+   "title": "Portfolio Specialist",
+   "dept": "buyer",
+   "type": "agent",
+   "status": "draft",
+   "does": "Matches buyers to towers and units from developer sheets.",
+   "reportsTo": [
+    "dans_desk"
+   ],
+   "handsTo": [
+    "showing"
+   ],
+   "n8n": "sXMlteWJsh3E4wWB",
+   "owner": "Dan"
+  },
+  {
+   "id": "market",
+   "title": "Brickell Market Analyst",
+   "dept": "buyer",
+   "type": "agent",
+   "status": "draft",
+   "does": "Trends, absorption, price per foot, competing launches and talking points.",
+   "reportsTo": [
+    "dans_desk"
+   ],
+   "handsTo": [
+    "dan",
+    "strategist"
+   ],
+   "n8n": "wFsYiSx399e8SePz",
+   "owner": "Dan"
+  },
+  {
+   "id": "showing",
+   "title": "Showing Coordinator",
+   "dept": "buyer",
+   "type": "agent",
+   "status": "hire",
+   "does": "Books sales gallery visits, sends a prep packet, confirms.",
+   "reportsTo": [
+    "dans_desk"
+   ],
+   "handsTo": [
+    "dan"
+   ],
+   "owner": "Dan"
+  },
+  {
+   "id": "buyer_specialist",
+   "title": "Licensed Buyer Specialist",
+   "dept": "buyer",
+   "type": "person",
+   "status": "hire",
+   "does": "Second licensed closer, Spanish required. Takes live high-intent calls and tours.",
+   "reportsTo": [
+    "dan"
+   ],
+   "handsTo": [
+    "tc"
+   ],
+   "owner": "Dan"
+  },
+  {
+   "id": "investor",
+   "title": "Investor Services",
+   "dept": "buyer",
+   "type": "agent",
+   "status": "hire",
+   "does": "Checks each building's rental, hotel pool, assignment and resale rules.",
+   "reportsTo": [
+    "dans_desk"
+   ],
+   "handsTo": [
+    "dan",
+    "partner_bench"
+   ],
+   "owner": "Dan"
+  },
+  {
+   "id": "tc",
+   "title": "Transaction Coordinator",
+   "dept": "transactions",
+   "type": "agent",
+   "status": "planned",
+   "does": "Runs Dan's checklist from reservation to keys.",
+   "reportsTo": [
+    "jarvis"
+   ],
+   "handsTo": [
+    "cx_lead"
+   ],
+   "head": true,
+   "owner": "Dan",
+   "more": "Waits on Dan's checklist."
+  },
+  {
+   "id": "deposits",
+   "title": "Deal and Deposit Tracker",
+   "dept": "transactions",
+   "type": "agent",
+   "status": "draft",
+   "does": "Deposits and milestones due or overdue, the 15-day cancel window and escrow checks.",
+   "reportsTo": [
+    "tc"
+   ],
+   "handsTo": [
+    "tc",
+    "finance_lead"
+   ],
+   "n8n": "7KiqVjRk6ybC5Wch",
+   "owner": "Dan"
+  },
+  {
+   "id": "cx_lead",
+   "title": "Client Experience Lead",
+   "dept": "clientcare",
+   "type": "person",
+   "status": "hire",
+   "does": "The human face after contract: check-ins, closing gifts, past-client events. Dan covers it until the hire.",
+   "reportsTo": [
+    "dan"
+   ],
+   "handsTo": [
+    "dev_registration"
+   ],
+   "head": true,
+   "owner": "Dan",
+   "more": "Pre-construction buyers wait two to four years between contract and keys, and the developer pays only at closing."
+  },
+  {
+   "id": "construction_nurture",
+   "title": "Construction Nurture",
+   "dept": "clientcare",
+   "type": "agent",
+   "status": "hire",
+   "does": "Deposit reminders, construction updates, delivery dates, lender re-approval, walk-through.",
+   "reportsTo": [
+    "cx_lead"
+   ],
+   "handsTo": [
+    "tc"
+   ],
+   "owner": "Dan"
+  },
+  {
+   "id": "past_client",
+   "title": "Past-Client and Referral",
+   "dept": "clientcare",
+   "type": "agent",
+   "status": "hire",
+   "does": "Anniversaries, reviews and referral asks. Keeps past clients current.",
+   "reportsTo": [
+    "cx_lead"
+   ],
+   "handsTo": [
+    "intake_router"
+   ],
+   "owner": "Dan"
+  },
+  {
+   "id": "integration_monitor",
+   "title": "Integration Monitor",
+   "dept": "ops",
+   "type": "agent",
+   "status": "planned",
+   "does": "Watches failed runs, expired logins, webhooks and broken links.",
+   "reportsTo": [
+    "nick"
+   ],
+   "handsTo": [
+    "it_fixer"
+   ],
+   "owner": "Nick",
+   "schedule": "Every hour"
+  },
+  {
+   "id": "it_fixer",
+   "title": "IT Troubleshooter",
+   "dept": "ops",
+   "type": "agent",
+   "status": "planned",
+   "does": "Diagnoses issues and drafts fixes for Nick to apply.",
+   "reportsTo": [
+    "nick"
+   ],
+   "handsTo": [
+    "nick"
+   ],
+   "owner": "Nick"
+  },
+  {
+   "id": "hiring_manager",
+   "title": "Hiring Manager",
+   "dept": "people",
+   "type": "agent",
+   "status": "live",
+   "does": "Finds and safety-scans agents on GitHub, recommends hires, keeps the roster.",
+   "reportsTo": [
+    "jarvis"
+   ],
+   "handsTo": [
+    "nick"
+   ],
+   "head": true,
+   "n8n": "SBV7uj3qQmeix4TS",
+   "owner": "Nick",
+   "schedule": "On demand, Talent Scout monthly",
+   "approval": "Every hire waits for Nick"
+  },
+  {
+   "id": "skills_trainer",
+   "title": "Skills Trainer",
+   "dept": "people",
+   "type": "agent",
+   "status": "planned",
+   "does": "Scores each agent's work weekly and updates its skill file from your corrections.",
+   "reportsTo": [
+    "hiring_manager"
+   ],
+   "handsTo": [
+    "nick",
+    "dan"
+   ],
+   "owner": "Nick",
+   "schedule": "Thursdays",
+   "more": "Was the Quality Overseer. Skill files live in a private GitHub repo you can open in Obsidian."
+  },
+  {
+   "id": "finance_lead",
+   "title": "Finance Lead",
+   "dept": "finance",
+   "type": "agent",
+   "status": "planned",
+   "does": "Weekly read-only report: AI spend, cost per lead, pipeline value, expected commissions.",
+   "reportsTo": [
+    "jarvis"
+   ],
+   "handsTo": [
+    "nick",
+    "dan"
+   ],
+   "head": true,
+   "owner": "Nick",
+   "schedule": "Mondays"
+  },
+  {
+   "id": "invoicing",
+   "title": "Invoicing Assistant",
+   "dept": "finance",
+   "type": "agent",
+   "status": "hire",
+   "does": "Drafts invoices on the 15th and at month end, and tracks developer commissions due at closing.",
+   "reportsTo": [
+    "finance_lead"
+   ],
+   "handsTo": [
+    "nick"
+   ],
+   "owner": "Nick",
+   "schedule": "15th and month end"
+  },
+  {
+   "id": "compliance_gate",
+   "title": "Compliance Gate",
+   "dept": "compliance",
+   "type": "agent",
+   "status": "hire",
+   "does": "Buyer agreement before tours, ad and post pre-check, foreign-buyer screen, title-ready entity details.",
+   "reportsTo": [
+    "dan"
+   ],
+   "handsTo": [
+    "dans_desk",
+    "poster",
+    "tc"
+   ],
+   "owner": "Dan",
+   "approval": "Blocks the step until it passes"
+  },
+  {
+   "id": "consent_guard",
+   "title": "Consent Guard",
+   "dept": "compliance",
+   "type": "agent",
+   "status": "hire",
+   "does": "Logs written consent before any automated text or call, honors STOP, checks do-not-call.",
+   "reportsTo": [
+    "nick"
+   ],
+   "handsTo": [
+    "ldm"
+   ],
+   "owner": "Nick"
+  },
+  {
+   "id": "broker",
+   "title": "Broker of record and counsel",
+   "dept": "compliance",
+   "type": "outside",
+   "status": "outside",
+   "does": "Legal liability, contract review and escalations.",
+   "reportsTo": [],
+   "handsTo": [
+    "dan"
+   ],
+   "owner": "Dan"
+  },
+  {
+   "id": "dev_registration",
+   "title": "Developer Registration and Inventory",
+   "dept": "partnerships",
+   "type": "agent",
+   "status": "hire",
+   "does": "Registers each buyer with the developer before the first visit, and tracks commission, incentives and releases per tower.",
+   "reportsTo": [
+    "dan"
+   ],
+   "handsTo": [
+    "portfolio",
+    "finance_lead"
+   ],
+   "owner": "Dan"
+  },
+  {
+   "id": "partner_bench",
+   "title": "Partner Bench",
+   "dept": "partnerships",
+   "type": "agent",
+   "status": "hire",
+   "does": "Vetted lenders, closing attorneys, title, insurance, tax and designers. Makes intros after Dan's yes.",
+   "reportsTo": [
+    "nick"
+   ],
+   "handsTo": [
+    "cx_lead"
+   ],
+   "owner": "Nick"
+  },
+  {
+   "id": "intl_referral",
+   "title": "International Referral Manager",
+   "dept": "partnerships",
+   "type": "person",
+   "status": "hire",
+   "does": "Bilingual. Builds referral agreements with brokers in Latin America and tracks referral fees.",
+   "reportsTo": [
+    "dan"
+   ],
+   "handsTo": [
+    "intake_router"
+   ],
+   "owner": "Dan"
+  }
+ ]
+}

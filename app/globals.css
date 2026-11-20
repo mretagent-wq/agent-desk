@@ -539,6 +539,8 @@ body { background: #6fb3c4 linear-gradient(180deg, #8ec9df 0%, #5fb3c2 48%, #d9c
 body::before {
   content: ""; position: fixed; inset: -3%; z-index: 0; pointer-events: none;
   background: var(--photo) center 62% / cover no-repeat;
+  /* Softened so the content reads first; saturate keeps the sand and water colors from going grey. */
+  filter: blur(9px) saturate(118%);
   animation: tide 48s ease-in-out infinite alternate;
   will-change: transform;
 }
@@ -617,7 +619,7 @@ a.glass:hover, .kpi.glass:hover, .agent.glass:hover { transform: translateY(-3px
 .grid { gap: 20px; }
 
 @media (max-width: 900px) {
-  body::before { background-image: var(--photo-sm); }
+  body::before { background-image: var(--photo-sm); filter: blur(7px) saturate(118%); }
   .side.glass { background: rgba(var(--tide), 0.55); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border-right: 0; border-bottom: 1px solid rgba(255, 255, 255, 0.16); }
 }
 @media (prefers-reduced-motion: reduce) {

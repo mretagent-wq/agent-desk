@@ -9,3 +9,4 @@ export const IconRuns = () => (<svg viewBox="0 0 24 24" {...p}><path d="M3 12h4l
 export const IconInbox = () => (<svg viewBox="0 0 24 24" {...p}><path d="M4 13.5 6.5 5h11l2.5 8.5V19H4z" /><path d="M4 13.5h5a3 3 0 0 0 6 0h5" /></svg>);
 export const IconShield = () => (<svg viewBox="0 0 24 24" {...p} width="14" height="14"><path d="M12 3 5 6v5.5c0 4.3 3 7.6 7 9.5 4-1.9 7-5.2 7-9.5V6z" /></svg>);
 export const IconLock = () => (<svg viewBox="0 0 24 24" {...p}><rect x="5" y="10.5" width="14" height="10" rx="2.5" /><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" /></svg>);
+export const IconJarvis = () => (<svg viewBox="0 0 24 24" {...p}><circle cx="12" cy="12" r="8.5" /><path d="M7.5 12h1.5l1.5-3 2 6 1.5-3h2.5" /></svg>);

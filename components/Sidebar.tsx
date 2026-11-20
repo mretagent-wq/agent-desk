@@ -2,13 +2,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ViewToggle from "./ViewToggle";
-import { IconAgents, IconContent, IconFlows, IconHome, IconInbox, IconLock, IconRuns, IconTeam, IconTodo } from "./Icons";
+import { IconAgents, IconContent, IconFlows, IconHome, IconInbox, IconJarvis, IconLock, IconRuns, IconTeam, IconTodo } from "./Icons";
 import ProfileCircle from "./ProfileCircle";
 
 export default function Sidebar({ pending, who, title, admin, preview, photo = null }: { pending: number; who: string; title: string; admin: boolean; preview: boolean; photo?: string | null }) {
   const path = usePathname();
   const items = [
     { href: "/", label: "Overview", icon: <IconHome /> },
+    { href: "/jarvis", label: "Jarvis", icon: <IconJarvis /> },
     { href: "/approvals", label: "Approvals", icon: <IconInbox />, count: pending },
     ...(admin ? [{ href: "/private", label: "My to-do", icon: <IconLock /> }] : []),
     { href: "/todo", label: "To-do", icon: <IconTodo /> },

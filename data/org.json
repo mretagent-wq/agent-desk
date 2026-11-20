@@ -295,6 +295,34 @@
    "more": "Sehab already runs one; it is to be migrated in, not rebuilt."
   },
   {
+   "id": "aeo",
+   "title": "AEO Agent",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "planned",
+   "does": "Answer engine optimization. Placeholder, to be defined later.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [],
+   "group": "Web and ads",
+   "more": "Placeholder added Nov 20. No n8n build yet."
+  },
+  {
+   "id": "geo",
+   "title": "GEO Agent",
+   "dept": "marketing",
+   "type": "agent",
+   "status": "planned",
+   "does": "Generative engine optimization: visibility in AI answers. Placeholder, to be defined later.",
+   "reportsTo": [
+    "strategist"
+   ],
+   "handsTo": [],
+   "group": "Web and ads",
+   "more": "Placeholder added Nov 20. No n8n build yet."
+  },
+  {
    "id": "blog_writer",
    "title": "Blog and Website Writer",
    "dept": "marketing",

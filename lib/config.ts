@@ -258,3 +258,10 @@ export const USERS = { tableId: "UvCPXRGHN5UT6TGG" };
  * (owner, title, note, done, done_at, removed). Read and changed only by the owner's admin login, on the server.
  */
 export const PRIVATE_TODOS = { tableId: "ug6WcKMpoy3j5YKS" };
+
+/**
+ * Profile photos. Rows live in the n8n data table desk_photos (photo_key, mime, data_b64, note), never in this repo.
+ * A desk_users row points at one with photo_url "desk:<photo_key>"; the app serves it at /api/photo/<photo_key>
+ * to signed-in people only (and to the remembered person on the sign-in screen).
+ */
+export const DESK_PHOTOS = { tableId: "cxw4IFyYD7V4o7fq" };

@@ -1,4 +1,5 @@
 import "server-only";
+import { isPreview } from "./mode";
 
 /** Settings the live app needs. Names only; values are never read out. */
 export const REQUIRED_ENV = [
@@ -11,5 +12,6 @@ export const REQUIRED_ENV = [
 ] as const;
 
 export function missingEnv(): { name: string; what: string }[] {
+  if (isPreview()) return []; // local preview signs in as the preview user and needs none of these
   return REQUIRED_ENV.filter(([k]) => !process.env[k]?.trim()).map(([name, what]) => ({ name, what }));
 }

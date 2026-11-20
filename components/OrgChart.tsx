@@ -21,6 +21,7 @@ export interface ChartRole {
   head?: boolean;
   group?: string;
   n8n?: string;
+  photo?: string;
   owner?: string;
   schedule?: string;
   inputs?: string;
@@ -57,7 +58,7 @@ function Tile({ r, onPick, sel, lit, big }: { r: ChartRole; onPick: (id: string)
       onClick={(e) => { e.stopPropagation(); onPick(r.id); }}
       aria-pressed={sel === r.id}
     >
-      <OrgAvatar id={r.id} title={r.title} name={r.name} dept={r.dept} type={r.type} n8n={r.n8n} status={r.status} size={big ? 46 : 34} />
+      <OrgAvatar id={r.id} title={r.title} name={r.name} dept={r.dept} type={r.type} n8n={r.n8n} status={r.status} photo={r.photo} size={big ? 46 : 34} />
       <span className="oc-text">
         <b>{r.name ?? r.title}</b>
         <span className="oc-sub">
@@ -90,7 +91,7 @@ function Sheet({ r, roles, onPick, onClose }: { r: ChartRole; roles: Map<string,
     <aside className="oc-sheet glass" role="dialog" aria-label={`${r.title} details`} onClick={(e) => e.stopPropagation()}>
       <button type="button" className="oc-close" onClick={onClose} aria-label="Close">×</button>
       <div className="oc-sheet-head" key={r.id}>
-        <OrgAvatar id={r.id} title={r.title} name={r.name} dept={r.dept} type={r.type} n8n={r.n8n} status={r.status} size={72} />
+        <OrgAvatar id={r.id} title={r.title} name={r.name} dept={r.dept} type={r.type} n8n={r.n8n} status={r.status} photo={r.photo} size={72} />
         <div>
           <h2>{r.name ?? r.title}</h2>
           <div className="oc-meta">
@@ -240,7 +241,7 @@ export default function OrgChart({ roles, depts }: { roles: ChartRole[]; depts: 
           <Tile r={head} onPick={pick} sel={sel} lit={lit} big />
         ) : head ? (
           <button type="button" className={`oc-led${sel === head.id ? " sel" : ""}`} onClick={(e) => { e.stopPropagation(); pick(head.id); }}>
-            <OrgAvatar id={head.id} title={head.title} name={head.name} dept={head.dept} type={head.type} status={head.status} size={22} />
+            <OrgAvatar id={head.id} title={head.title} name={head.name} dept={head.dept} type={head.type} status={head.status} photo={head.photo} size={22} />
             <span>Led by <b>{head.name ?? head.title}</b>{id === "compliance" ? ", to confirm" : ""}</span>
           </button>
         ) : null}

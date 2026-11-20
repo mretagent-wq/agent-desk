@@ -14,7 +14,7 @@ export default async function DashLayout({ children }: { children: React.ReactNo
   const preview = s.mode === "preview";
   return (
     <div className="shell">
-      <Sidebar pending={s.approvals.length} who={user.name} title={user.title} admin={user.role === "admin"} preview={preview} />
+      <Sidebar pending={s.approvals.length} who={user.name} title={user.title} admin={user.role === "admin"} preview={preview} photo={user.photo} />
       <main className="main">
         {preview && (
           <div className="banner glass warn">

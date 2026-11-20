@@ -36,6 +36,8 @@ export interface OrgRole {
   cap?: number;
   model?: string;
   tools?: string[];
+  /** Profile photo, set only from desk_changes as "desk:<photo_key>"; served by /api/photo to signed-in people. */
+  photo?: string;
 }
 
 export interface OrgDept { id: string; name: string; head: string | null; stage: string }
@@ -79,6 +81,10 @@ export async function getOrg(): Promise<Org> {
     if (d.handsTo !== undefined) next.handsTo = list(d.handsTo) ?? [];
     if (d.tools !== undefined) next.tools = list(d.tools);
     if (d.head !== undefined) next.head = d.head === true || d.head === "true";
+    if (d.photo !== undefined) {
+      const m = /^desk:([a-z0-9_-]{1,40})$/i.exec(s(d.photo));
+      if (m) next.photo = `/api/photo/${m[1]}`; else delete next.photo;
+    }
     if (d.cap !== undefined) { const n = Number(d.cap); if (Number.isFinite(n) && n > 0) next.cap = n; else delete next.cap; }
     if (i >= 0) roles[i] = next; else roles.push(next);
   }

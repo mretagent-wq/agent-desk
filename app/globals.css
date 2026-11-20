@@ -807,3 +807,58 @@ a.glass:hover, .kpi.glass:hover, .agent.glass:hover { transform: translateY(-3px
   .oc-sheet, .oc-sheet-head, .oc-does, .oc-facts, .oc-more { animation: none; }
   .oc-tile, .oc-more-body { transition: none; }
 }
+
+/* Mac-style sign-in and unlock (Nov 20): the wallpaper blurs, a big round photo with the name under it,
+   one pill to continue, the clock above, as on a Mac lock screen. */
+body:has(.login.mac)::before { filter: blur(26px) saturate(130%); }
+body:has(.login.mac)::after { background: rgba(var(--tide), 0.30); }
+.login.mac { display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 7vh 20px 4vh; gap: 24px; }
+.lock-clock { min-height: 128px; text-align: center; color: #fff; text-shadow: 0 2px 30px rgba(var(--tide), 0.5); animation: glide 900ms var(--ease) both; }
+.lock-day { font: 600 19px var(--display); letter-spacing: -0.01em; opacity: 0.9; }
+.lock-time { font: 700 96px/1 var(--display); letter-spacing: -0.045em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+.mac-user { display: flex; flex-direction: column; align-items: center; gap: 14px; width: min(300px, 100%); animation: pop 700ms var(--spring) both; animation-delay: 120ms; }
+.pc { position: relative; flex: none; display: grid; place-items: center; border-radius: 50%; overflow: hidden; color: #fff;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.10));
+  backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28), 0 18px 50px -14px rgba(4, 20, 30, 0.75); }
+.pc img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pc::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.12); pointer-events: none; }
+.pc-ini { font-family: var(--display); font-weight: 600; letter-spacing: -0.02em; }
+.pc-mark { width: 34%; height: 34%; border-radius: 26%; border: 3px solid #fff; box-shadow: inset 0 0 0 7px transparent, inset 0 0 0 30px rgba(255, 255, 255, 0.9); opacity: 0.92; }
+.mac-name { font: 650 22px var(--display); letter-spacing: -0.02em; color: #fff; text-shadow: 0 1px 16px rgba(var(--tide), 0.55); margin-top: 4px; }
+.mac-field { appearance: none; width: 100%; height: 40px; display: flex; align-items: center; gap: 10px; padding: 0 5px 0 14px; border-radius: 999px; cursor: pointer; color: #fff;
+  font: 500 14px var(--sans); text-align: left; border: 1px solid rgba(255, 255, 255, 0.26);
+  background: rgba(255, 255, 255, 0.16); backdrop-filter: blur(24px) saturate(170%); -webkit-backdrop-filter: blur(24px) saturate(170%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 10px 30px -16px rgba(4, 20, 30, 0.7);
+  transition: background 260ms var(--ease), transform 300ms var(--spring), border-color 260ms var(--ease); }
+.mac-field:hover { background: rgba(255, 255, 255, 0.24); border-color: rgba(255, 255, 255, 0.4); }
+.mac-field:active { transform: scale(0.98); }
+.mac-field:focus-visible { outline: none; box-shadow: 0 0 0 4px rgba(var(--sea-rgb), 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25); }
+.mac-g { display: grid; place-items: center; opacity: 0.9; }
+.mac-label { flex: 1; color: rgba(255, 255, 255, 0.86); }
+.mac-go { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: var(--on-sea);
+  background: linear-gradient(180deg, var(--sea-2), var(--sea)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5); transition: transform 300ms var(--spring); }
+.mac-field:hover .mac-go { transform: translateX(2px); }
+.mac-spin { width: 13px; height: 13px; border-radius: 50%; border: 2px solid rgba(4, 41, 45, 0.25); border-top-color: var(--on-sea); animation: macspin 700ms linear infinite; }
+@keyframes macspin { to { transform: rotate(360deg); } }
+.mac-note { font-size: 13px; color: rgba(255, 255, 255, 0.78); text-shadow: 0 1px 12px rgba(var(--tide), 0.6); text-align: center; }
+.mac-note.link { text-decoration: none; transition: color 200ms var(--ease); }
+.mac-note.link:hover { color: #fff; }
+.mac-note.bad { color: #ffd1c9; }
+.mac-foot { font: 500 12px var(--sans); letter-spacing: 0.04em; color: rgba(255, 255, 255, 0.62); text-transform: uppercase; }
+.login.mac.unlock { justify-content: center; }
+.unlock-ring { position: relative; display: block; border-radius: 50%; }
+.unlock-ring::before { content: ""; position: absolute; inset: -7px; border-radius: 50%; border: 2px solid rgba(var(--sea-rgb), 0.0);
+  animation: ring 1300ms var(--ease) 250ms both; }
+@keyframes ring { 0% { border-color: rgba(142, 227, 226, 0); transform: scale(0.94); } 45% { border-color: rgba(142, 227, 226, 0.95); } 100% { border-color: rgba(142, 227, 226, 0); transform: scale(1.12); } }
+.unlock .mac-note { animation: glide 600ms var(--ease) 450ms both; }
+.unlock .mac-user { transition: transform 520ms var(--ease), opacity 520ms var(--ease), filter 520ms var(--ease); }
+.unlock.out .mac-user { transform: scale(1.08); opacity: 0; filter: blur(8px); }
+@media (max-width: 600px) { .lock-time { font-size: 72px; } .lock-clock { min-height: 100px; } }
+@media (prefers-reduced-motion: reduce) { .mac-user, .lock-clock, .unlock-ring::before, .unlock .mac-note { animation: none; } }
+.side-foot .who-row { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+.side-foot .who-row .who-title { margin-bottom: 0; }
+.side-foot .who-row .pc { box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.24); }
+.side-foot .who-row .pc-ini { font-size: 12px; }
+.oav.photo { border-radius: 50%; overflow: hidden; box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.32), 0 10px 24px -12px rgba(4, 20, 30, 0.75); }
+.oav.photo img { object-fit: cover; border-radius: 50%; }

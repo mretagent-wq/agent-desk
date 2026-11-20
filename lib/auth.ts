@@ -5,9 +5,10 @@ import GoogleProvider from "next-auth/providers/google";
 import { USERS } from "./config";
 import { isPreview } from "./mode";
 import * as n8n from "./n8n";
+import { photoKey, photoSrc } from "./photo";
 
 export type Role = "admin" | "member";
-export interface DeskUser { email: string; name: string; title: string; role: Role; photo: string | null }
+export interface DeskUser { email: string; name: string; title: string; role: Role; photo: string | null; photoKey: string | null }
 
 function emails(v: string | undefined): string[] {
   return (v ?? "").split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
@@ -47,7 +48,8 @@ export async function lookupUser(email: string, fallbackName = ""): Promise<Desk
     name: str(row?.name) || fallbackName || e,
     title: str(row?.title),
     role: admin ? "admin" : "member",
-    photo: photo.startsWith("https://") ? photo : null,
+    photo: photoSrc(photo),
+    photoKey: photoKey(photo),
   };
 }
 
@@ -70,7 +72,15 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-const PREVIEW_USER: DeskUser = { email: "preview@local", name: "Preview", title: "Local preview", role: "admin", photo: null };
+const PREVIEW_USER: DeskUser = {
+  email: "preview@local",
+  name: process.env.PREVIEW_NAME || "Preview",
+  title: "Local preview",
+  role: "admin",
+  photo: process.env.PREVIEW_PHOTO_FILE ? "/api/photo/preview" : null,
+  photoKey: process.env.PREVIEW_PHOTO_FILE ? "preview" : null,
+};
+export function previewUser(): DeskUser { return PREVIEW_USER; }
 
 /** Who is signed in right now, checked against the current lists. Null when nobody allowed is. */
 export async function currentUser(): Promise<DeskUser | null> {

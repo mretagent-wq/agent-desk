@@ -3,8 +3,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ViewToggle from "./ViewToggle";
 import { IconAgents, IconContent, IconFlows, IconHome, IconInbox, IconLock, IconRuns, IconTeam, IconTodo } from "./Icons";
+import ProfileCircle from "./ProfileCircle";
 
-export default function Sidebar({ pending, who, title, admin, preview }: { pending: number; who: string; title: string; admin: boolean; preview: boolean }) {
+export default function Sidebar({ pending, who, title, admin, preview, photo = null }: { pending: number; who: string; title: string; admin: boolean; preview: boolean; photo?: string | null }) {
   const path = usePathname();
   const items = [
     { href: "/", label: "Overview", icon: <IconHome /> },
@@ -37,8 +38,13 @@ export default function Sidebar({ pending, who, title, admin, preview }: { pendi
       </nav>
       <div className="side-foot">
         <ViewToggle />
-        <div className="who">{who}</div>
-        {title && <div className="who-title">{title}</div>}
+        <div className="who-row">
+          <ProfileCircle name={who} photo={photo} size={30} />
+          <div>
+            <div className="who">{who}</div>
+            {title && <div className="who-title">{title}</div>}
+          </div>
+        </div>
         {preview ? <div>Local preview</div> : <a href="/api/auth/signout">Sign out</a>}
       </div>
     </aside>

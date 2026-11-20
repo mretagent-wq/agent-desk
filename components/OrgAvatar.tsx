@@ -36,7 +36,12 @@ const DEPT_MARK: Record<string, ReactNode> = {
   partnerships: (<><rect x="12" y="25" width="22" height="14" rx="7" /><rect x="30" y="25" width="22" height="14" rx="7" /></>),
 };
 
-export function OrgAvatar({ id, title, name, dept, type, n8n, status, size = 40 }: { id: string; title: string; name?: string; dept: string; type: string; n8n?: string; status: string; size?: number }) {
+export function OrgAvatar({ id, title, name, dept, type, n8n, status, photo, size = 40 }: { id: string; title: string; name?: string; dept: string; type: string; n8n?: string; status: string; photo?: string; size?: number }) {
+  if (photo) {
+    // A real photo, round like a Mac profile picture.
+    // eslint-disable-next-line @next/next/no-img-element
+    return <span className="oav photo" style={{ width: size, height: size }}><img className="avatar" src={photo} alt={`${name ?? title} profile picture`} width={size} height={size} /></span>;
+  }
   const pending = status === "planned" || status === "hire" || status === "confirm";
   const cls = `oav${pending ? " pending" : ""}${type === "person" ? " person" : ""}`;
   if (n8n && hasMark(n8n)) {

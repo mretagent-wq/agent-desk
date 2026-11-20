@@ -1,6 +1,6 @@
 "use client";
 import { useState, useTransition } from "react";
-import { addTodo, decideApproval, pauseWorkflow, toggleTodo, resumeWorkflow, retryRun, stopRun, type ActionResult } from "@/app/actions";
+import { addPrivateTodo, addTodo, decideApproval, pauseWorkflow, removePrivateTodo, toggleTodo, togglePrivateTodo, resumeWorkflow, retryRun, stopRun, type ActionResult } from "@/app/actions";
 
 function useAction() {
   const [pending, start] = useTransition();
@@ -115,7 +115,7 @@ export function ApprovalActions({ sourceId, rowId, approveLabel }: { sourceId: s
   );
 }
 
-export function TodoSwitch({ id, title, done }: { id: number; title: string; done: boolean }) {
+export function TodoSwitch({ id, title, done, mine }: { id: number; title: string; done: boolean; mine?: boolean }) {
   const { pending, fire, node } = useAction();
   const [on, setOn] = useState(done);
   return (
@@ -128,7 +128,7 @@ export function TodoSwitch({ id, title, done }: { id: number; title: string; don
         onClick={() => {
           const next = !on;
           setOn(next);
-          fire(() => toggleTodo(id, next), (r) => { if (!r.ok) setOn(!next); });
+          fire(() => (mine ? togglePrivateTodo(id, next) : toggleTodo(id, next)), (r) => { if (!r.ok) setOn(!next); });
         }}
       />
       {node}
@@ -136,7 +136,7 @@ export function TodoSwitch({ id, title, done }: { id: number; title: string; don
   );
 }
 
-export function AddTodo() {
+export function AddTodo({ mine }: { mine?: boolean } = {}) {
   const { pending, fire, node } = useAction();
   const [title, setTitle] = useState("");
   const [note, setNote] = useState("");
@@ -146,7 +146,7 @@ export function AddTodo() {
       onSubmit={(e) => {
         e.preventDefault();
         if (!title.trim()) return;
-        fire(() => addTodo(title, note), (r) => { if (r.ok) { setTitle(""); setNote(""); } });
+        fire(() => (mine ? addPrivateTodo(title, note) : addTodo(title, note)), (r) => { if (r.ok) { setTitle(""); setNote(""); } });
       }}
     >
       <input className="input" placeholder="Add a to-do" value={title} onChange={(e) => setTitle(e.target.value)} maxLength={200} />
@@ -154,5 +154,29 @@ export function AddTodo() {
       <button className="btn primary" disabled={pending || !title.trim()}>Add</button>
       {node}
     </form>
+  );
+}
+
+export function DeleteTodo({ id, title }: { id: number; title: string }) {
+  const { pending, fire, node } = useAction();
+  const [ask, setAsk] = useState(false);
+  return (
+    <>
+      <button className="btn ghost sm" disabled={pending} onClick={() => setAsk(true)} aria-label={`Delete “${title}”`}>Delete</button>
+      {ask && (
+        <Confirm
+          title="Delete this item?"
+          body={`“${title}” comes off your list.`}
+          cta="Delete"
+          danger
+          onNo={() => setAsk(false)}
+          onYes={() => {
+            setAsk(false);
+            fire(() => removePrivateTodo(id));
+          }}
+        />
+      )}
+      {node}
+    </>
   );
 }

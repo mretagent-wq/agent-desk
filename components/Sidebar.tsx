@@ -2,13 +2,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import ViewToggle from "./ViewToggle";
-import { IconAgents, IconContent, IconFlows, IconHome, IconInbox, IconRuns, IconTeam, IconTodo } from "./Icons";
+import { IconAgents, IconContent, IconFlows, IconHome, IconInbox, IconLock, IconRuns, IconTeam, IconTodo } from "./Icons";
 
-export default function Sidebar({ pending, who, preview }: { pending: number; who: string; preview: boolean }) {
+export default function Sidebar({ pending, who, title, admin, preview }: { pending: number; who: string; title: string; admin: boolean; preview: boolean }) {
   const path = usePathname();
   const items = [
     { href: "/", label: "Overview", icon: <IconHome /> },
     { href: "/approvals", label: "Approvals", icon: <IconInbox />, count: pending },
+    ...(admin ? [{ href: "/private", label: "My to-do", icon: <IconLock /> }] : []),
     { href: "/todo", label: "To-do", icon: <IconTodo /> },
     { href: "/team", label: "Team", icon: <IconTeam /> },
     { href: "/content", label: "Content", icon: <IconContent /> },
@@ -37,6 +38,7 @@ export default function Sidebar({ pending, who, preview }: { pending: number; wh
       <div className="side-foot">
         <ViewToggle />
         <div className="who">{who}</div>
+        {title && <div className="who-title">{title}</div>}
         {preview ? <div>Local preview</div> : <a href="/api/auth/signout">Sign out</a>}
       </div>
     </aside>

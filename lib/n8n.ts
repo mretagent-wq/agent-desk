@@ -176,3 +176,14 @@ export async function insertRow(tableId: string, data: Record<string, unknown>) 
     body: JSON.stringify({ data: [data], returnType: "count" }),
   });
 }
+
+/** Update only rows that match every column/value pair, e.g. { id: 4, owner: "a@b.com" }. */
+export async function updateRowWhere(tableId: string, match: Record<string, string | number>, data: Record<string, unknown>) {
+  await call(`/data-tables/${encodeURIComponent(tableId)}/rows/update`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      filter: { type: "and", filters: Object.entries(match).map(([columnName, value]) => ({ columnName, condition: "eq", value })) },
+      data,
+    }),
+  });
+}

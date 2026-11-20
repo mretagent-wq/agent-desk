@@ -693,3 +693,8 @@ a.glass:hover, .kpi.glass:hover, .agent.glass:hover { transform: translateY(-3px
   /* Side-by-side cards keep their own height on wide screens instead of stretching to the taller one */
   [data-layout="wide"] .two { align-items: start; }
 }
+
+/* Private to-do and signed-in person (Nov 20) */
+.side-foot .who-title { color: var(--ink-3); margin-bottom: 4px; }
+.li.todo .btn.ghost.sm { flex: none; opacity: 0.7; }
+.li.todo .btn.ghost.sm:hover, .li.todo .btn.ghost.sm:focus-visible { opacity: 1; }

@@ -1,19 +1,20 @@
-import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
-import { authOptions } from "@/lib/auth";
+import { currentUser } from "@/lib/auth";
 import { ago } from "@/lib/format";
 import { snapshot } from "@/lib/view";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashLayout({ children }: { children: React.ReactNode }) {
+  // Checked on every page against the current lists, so taking someone off locks them out right away.
+  const user = await currentUser();
+  if (!user) redirect("/login?error=AccessDenied");
   const s = await snapshot();
   const preview = s.mode === "preview";
-  const session = preview ? null : await getServerSession(authOptions);
-  const who = preview ? "Nicholas & Dan" : session?.user?.name ?? session?.user?.email ?? "";
   return (
     <div className="shell">
-      <Sidebar pending={s.approvals.length} who={who} preview={preview} />
+      <Sidebar pending={s.approvals.length} who={user.name} title={user.title} admin={user.role === "admin"} preview={preview} />
       <main className="main">
         {preview && (
           <div className="banner glass warn">

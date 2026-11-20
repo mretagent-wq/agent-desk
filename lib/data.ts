@@ -1,5 +1,5 @@
 import "server-only";
-import { APPROVAL_SOURCES, CONTENT_SOURCES, EXTERNAL_INTAKE, TODOS, type ApprovalSource } from "./config";
+import { APPROVAL_SOURCES, CONTENT_SOURCES, EXTERNAL_INTAKE, PRIVATE_TODOS, TODOS, type ApprovalSource } from "./config";
 import { isPreview } from "./mode";
 import * as n8n from "./n8n";
 import type { Row } from "./n8n";
@@ -9,7 +9,7 @@ import type { ApprovalItem, ExecutionDetail, ExternalEvent, Snapshot } from "./t
 
 /* ---------- preview store (local only, resets on restart) ---------- */
 
-type PreviewStore = { active: Map<string, boolean>; decisions: Map<string, string>; todos?: Map<number, boolean>; added?: Row[] };
+type PreviewStore = { active: Map<string, boolean>; decisions: Map<string, string>; todos?: Map<number, boolean>; added?: Row[]; mine?: Row[] };
 const g = globalThis as unknown as { __previewStore?: PreviewStore };
 const store: PreviewStore = (g.__previewStore ??= { active: new Map(), decisions: new Map() });
 
@@ -217,4 +217,52 @@ export async function addTodo(title: string, note: string, by: string) {
     return;
   }
   await n8n.insertRow(TODOS.tableId, { title, note, done: false, added_by: by });
+}
+
+/* ---------- private to-do (admin only; the caller checks the role) ---------- */
+
+const truthy = (v: unknown) => v === true || v === "true";
+
+/** Made-up rows for local preview only. Real items live only in n8n. */
+function previewMine(owner: string): Row[] {
+  return (store.mine ??= [
+    { id: 1, owner, title: "Example private item", note: "Only the admin login sees this list.", done: false, removed: false, createdAt: new Date().toISOString() },
+    { id: 2, owner, title: "Another example", note: "", done: true, done_at: new Date().toISOString(), removed: false, createdAt: new Date().toISOString() },
+  ]);
+}
+
+export async function getPrivateTodos(owner: string): Promise<{ todos: Todo[]; error: string | null }> {
+  const mine = (rows: Row[]) =>
+    rows
+      .filter((r) => String(r.owner ?? "").trim().toLowerCase() === owner && !truthy(r.removed))
+      .map(toTodo)
+      .filter((t) => t.title);
+  if (isPreview()) return { todos: mine(previewMine(owner)), error: null };
+  if (!n8n.n8nConfigured()) return { todos: [], error: "n8n isn't connected yet." };
+  try {
+    return { todos: mine(await n8n.listRows(PRIVATE_TODOS.tableId, 1000)), error: null };
+  } catch (e) {
+    return { todos: [], error: e instanceof Error ? e.message : "Couldn't read your list." };
+  }
+}
+
+export async function addPrivateTodo(owner: string, title: string, note: string) {
+  if (isPreview()) {
+    const rows = previewMine(owner);
+    rows.unshift({ id: 1000 + rows.length, owner, title, note, done: false, removed: false, createdAt: new Date().toISOString() });
+    return;
+  }
+  await n8n.insertRow(PRIVATE_TODOS.tableId, { owner, title, note, done: false, removed: false });
+}
+
+export async function setPrivateTodo(owner: string, id: number, done: boolean) {
+  const data = { done, done_at: done ? new Date().toISOString() : null };
+  if (isPreview()) return void Object.assign(previewMine(owner).find((r) => r.id === id) ?? {}, data);
+  await n8n.updateRowWhere(PRIVATE_TODOS.tableId, { id, owner }, data);
+}
+
+/** Takes the item off the list. The row is kept in n8n, marked removed. */
+export async function removePrivateTodo(owner: string, id: number) {
+  if (isPreview()) return void Object.assign(previewMine(owner).find((r) => r.id === id) ?? {}, { removed: true });
+  await n8n.updateRowWhere(PRIVATE_TODOS.tableId, { id, owner }, { removed: true });
 }

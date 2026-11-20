@@ -245,3 +245,16 @@ export const TODOS = { tableId: "iHYq8K0rxweANg0W" };
  * the next page load, with no redeploy. Columns and kinds are described in lib/live.ts and LIVE-CHANGES.md.
  */
 export const LIVE_CHANGES = { tableId: "0dsAJYFlmQ3E319R" };
+
+/**
+ * Who can sign in, with name, title and role. Rows live in the n8n data table desk_users
+ * (email, name, title, role, active, photo_url). Adding a row lets that Google account in on its next sign-in.
+ * Admin rights come only from the ADMIN_EMAILS setting in Netlify; a row's role column alone never makes anyone admin.
+ */
+export const USERS = { tableId: "UvCPXRGHN5UT6TGG" };
+
+/**
+ * Private to-do lists, one per admin. Rows live in the n8n data table desk_private_todos
+ * (owner, title, note, done, done_at, removed). Read and changed only by the owner's admin login, on the server.
+ */
+export const PRIVATE_TODOS = { tableId: "ug6WcKMpoy3j5YKS" };

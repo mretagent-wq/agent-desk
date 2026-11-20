@@ -1,5 +1,5 @@
 {
- "version": "v1 with v2-lean-content",
+ "version": "v2 with v2-lean-content",
  "updated": "2026-11-19",
  "title": "Dan Maza PA agent team structure",
  "legend": {
@@ -143,7 +143,7 @@
    "job": "Monthly plan on the 1st, weekly briefs Mondays, intent per post; reads results",
    "why_it_matters": "Every post has a reason and a metric",
    "sourcing": "in-house",
-   "sourcing_note": "Built from 3 MIT repos plus Dan's strategy; draft awaiting publish",
+   "sourcing_note": "Published Nov 19; monthly plan runs on the 1st at 9 AM ET (first run Dec 1)",
    "outward_actions": false,
    "n8n_agent_id": "x1UKbOROpIYc2gIz"
   },
@@ -157,7 +157,7 @@
    "job": "Cut from footage, burn subtitles, export 9:16, Drive preview",
    "why_it_matters": "The maker",
    "sourcing": "in-house",
-   "sourcing_note": "Live; Luxury editing update is a draft awaiting publish",
+   "sourcing_note": "Published Nov 19 with Luxury editing; reads briefs, footage and the copy pack",
    "outward_actions": false,
    "n8n_agent_id": "10dJtM9xXNJyF7Xy"
   },
@@ -170,10 +170,13 @@
    "priority": 1,
    "job": "Checks cut and copy vs Brand Kit v2 and sources; 2 revision rounds then flags Nicholas",
    "why_it_matters": "A separate checker, so the maker never grades its own work",
-   "sourcing": "partial",
-   "sourcing_note": "jordanrendric/claude-video-vision (Safe 5, MIT) lets it see frames; scoring loop is custom",
+   "sourcing": "good_match",
+   "sourcing_note": "Hired Nov 19 from msitarzewski/agency-agents (Reality Checker, Evidence Collector, Brand Guardian; MIT, Safe 5) with the rubric and AgentClaimGuard approaches; frame review after render (claude-real-video later); unpublished draft",
    "outward_actions": false,
-   "n8n_agent_id": null
+   "n8n_agent_id": "zGxGyliQXwwodOO2",
+   "repo": "https://github.com/msitarzewski/agency-agents",
+   "hired_on": "2026-11-19",
+   "published_on": "2026-11-19"
   },
   {
    "id": "ads_analyst",
@@ -236,12 +239,12 @@
    "name": "SEO and Website Agent",
    "department": "web",
    "kind": "head",
-   "status": "draft",
+   "status": "external",
    "priority": 2,
    "job": "Watches Dan's project sites: SEO, AEO and GEO, speed, broken pages, backlinks; ranks fixes. Never changes a site",
    "why_it_matters": "Sites rank and stay accurate",
-   "sourcing": "in-house",
-   "sourcing_note": "Draft in n8n",
+   "sourcing": "external",
+   "sourcing_note": "Skipped Nov 19: Sehab already has an SEO agent set up; migrate it here later. Our draft stays unpublished",
    "outward_actions": false,
    "n8n_agent_id": "DQTeX0zXZXN382n9"
   },
@@ -302,29 +305,45 @@
    "n8n_agent_id": null
   },
   {
+   "id": "copywriter",
+   "name": "Copywriter",
+   "department": "marketing",
+   "kind": "worker",
+   "status": "hiring",
+   "priority": 1,
+   "job": "Hook, on-screen text, captions per platform, CTA, claim list",
+   "why_it_matters": "Words that earn sends and saves without unverified claims",
+   "sourcing": "good_match",
+   "sourcing_note": "Hired Nov 19 from coreyhaines31/marketingskills (MIT, Safe 8) with instagram-skills caption and hook rules and prosperity-real-estate-skills fair-housing rules; unpublished draft",
+   "outward_actions": false,
+   "n8n_agent_id": "v0PiA0gSXIz2vA8m",
+   "repo": "https://github.com/coreyhaines31/marketingskills",
+   "hired_on": "2026-11-19",
+   "published_on": "2026-11-19"
+  },
+  {
+   "id": "sound",
+   "name": "Sound Designer",
+   "department": "marketing",
+   "kind": "worker",
+   "status": "hiring",
+   "priority": 1,
+   "job": "IG library audio via Meta Audio API for Reels; vetted free music elsewhere; free voiceover",
+   "why_it_matters": "Calm, legal sound that makes the edit feel expensive",
+   "sourcing": "good_match",
+   "sourcing_note": "Hired Nov 19 from msitarzewski/agency-agents audio parts (MIT, Safe 5); librosa (BPM) and Kokoro-FastAPI (free voice) planned for the render server later, not installed; unpublished draft",
+   "outward_actions": false,
+   "n8n_agent_id": "bvLb8cj9tdZOwzGC",
+   "repo": "https://github.com/msitarzewski/agency-agents",
+   "hired_on": "2026-11-19",
+   "published_on": "2026-11-19"
+  },
+  {
    "id": "platform_strategist",
    "name": "Platform Strategist",
    "kind": "worker",
    "status": "hiring",
    "job": "Per-platform spec: format, length, hook style, cover, slot, keywords; monthly playbook refresh",
-   "department": "marketing",
-   "n8n_agent_id": null
-  },
-  {
-   "id": "copywriter",
-   "name": "Copywriter",
-   "kind": "worker",
-   "status": "hiring",
-   "job": "Hook, on-screen text, captions per platform, CTA, claim list",
-   "department": "marketing",
-   "n8n_agent_id": null
-  },
-  {
-   "id": "sound",
-   "name": "Sound Designer",
-   "kind": "worker",
-   "status": "hiring",
-   "job": "IG library audio via Meta Audio API for Reels; vetted free music elsewhere; free voiceover",
    "department": "marketing",
    "n8n_agent_id": null
   },
@@ -695,6 +714,18 @@
    "label": "Drafted deal reminders"
   },
   {
+   "from": "copywriter",
+   "to": "overseer",
+   "type": "data",
+   "label": "Outputs for weekly scoring"
+  },
+  {
+   "from": "sound",
+   "to": "overseer",
+   "type": "data",
+   "label": "Outputs for weekly scoring"
+  },
+  {
    "from": "strategist",
    "to": "platform_strategist",
    "type": "hands_off",
@@ -753,6 +784,28 @@
    "to": "strategist",
    "type": "data",
    "label": "Results 24h and 7d"
+  }
+ ],
+ "rejected_repos": [
+  {
+   "repo": "kajisho5/ffmpeg-skill",
+   "verdict": "Avoid",
+   "reason": "Install script collects all environment variables, including API keys, into a file that is sent out"
+  },
+  {
+   "repo": "gitroomhq/postiz-app",
+   "verdict": "Caution 29",
+   "reason": "Critical security history (account takeover, server file reads; latest advisory Nov 2) and vulnerable dependencies"
+  },
+  {
+   "repo": "lucasgrow/social-media-agent",
+   "verdict": "Avoid",
+   "reason": "Reads environment variables and sends data out"
+  },
+  {
+   "repo": "ENDEVSOLS/LongTracer",
+   "verdict": "Avoid",
+   "reason": "Reads environment variables and posts to a Slack webhook"
   }
  ],
  "content_team": {

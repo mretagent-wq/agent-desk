@@ -2,13 +2,53 @@ import "server-only";
 import type { NextAuthOptions } from "next-auth";
 import { getServerSession } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import { USERS } from "./config";
 import { isPreview } from "./mode";
+import * as n8n from "./n8n";
 
-export function allowedEmails(): string[] {
-  return (process.env.ALLOWED_EMAILS ?? "")
-    .split(",")
-    .map((s) => s.trim().toLowerCase())
-    .filter(Boolean);
+export type Role = "admin" | "member";
+export interface DeskUser { email: string; name: string; title: string; role: Role; photo: string | null }
+
+function emails(v: string | undefined): string[] {
+  return (v ?? "").split(",").map((s) => s.trim().toLowerCase()).filter(Boolean);
+}
+/** Google accounts allowed in as members (Netlify setting). */
+export function allowedEmails(): string[] { return emails(process.env.ALLOWED_EMAILS); }
+/** Google accounts with admin rights (Netlify setting). The only source of admin. */
+export function adminEmails(): string[] { return emails(process.env.ADMIN_EMAILS); }
+
+/* The desk_users roster, read from n8n and kept for a minute per server instance. */
+let cache: { at: number; rows: n8n.Row[] } | null = null;
+async function roster(): Promise<n8n.Row[]> {
+  if (!n8n.n8nConfigured()) return [];
+  if (cache && Date.now() - cache.at < 60_000) return cache.rows;
+  try {
+    const rows = await n8n.listRows(USERS.tableId, 500);
+    cache = { at: Date.now(), rows };
+    return rows;
+  } catch {
+    return cache?.rows ?? [];
+  }
+}
+
+const str = (v: unknown) => (typeof v === "string" ? v.trim() : "");
+
+/** The person behind an email, or null when that account isn't allowed in. */
+export async function lookupUser(email: string, fallbackName = ""): Promise<DeskUser | null> {
+  const e = email.trim().toLowerCase();
+  if (!e) return null;
+  const row = (await roster()).find((r) => str(r.email).toLowerCase() === e);
+  const rowActive = row ? row.active !== false && row.active !== "false" : false;
+  const admin = adminEmails().includes(e);
+  if (!admin && !rowActive && !allowedEmails().includes(e)) return null;
+  const photo = str(row?.photo_url);
+  return {
+    email: e,
+    name: str(row?.name) || fallbackName || e,
+    title: str(row?.title),
+    role: admin ? "admin" : "member",
+    photo: photo.startsWith("https://") ? photo : null,
+  };
 }
 
 export const authOptions: NextAuthOptions = {
@@ -25,16 +65,32 @@ export const authOptions: NextAuthOptions = {
       const p = profile as { email?: string; email_verified?: boolean } | undefined;
       const email = p?.email?.toLowerCase();
       if (!email || p?.email_verified === false) return false;
-      return allowedEmails().includes(email);
+      return (await lookupUser(email)) !== null;
     },
   },
 };
 
-/** Who is acting. Throws if nobody allowed is signed in. */
-export async function requireUser(): Promise<{ email: string; name: string }> {
-  if (isPreview()) return { email: "preview@local", name: "Preview" };
+const PREVIEW_USER: DeskUser = { email: "preview@local", name: "Preview", title: "Local preview", role: "admin", photo: null };
+
+/** Who is signed in right now, checked against the current lists. Null when nobody allowed is. */
+export async function currentUser(): Promise<DeskUser | null> {
+  if (isPreview()) return PREVIEW_USER;
   const session = await getServerSession(authOptions);
   const email = session?.user?.email?.toLowerCase();
-  if (!email || !allowedEmails().includes(email)) throw new Error("Not signed in.");
-  return { email, name: session?.user?.name ?? email };
+  if (!email) return null;
+  return lookupUser(email, session?.user?.name ?? "");
+}
+
+/** Who is acting. Throws if nobody allowed is signed in. */
+export async function requireUser(): Promise<DeskUser> {
+  const u = await currentUser();
+  if (!u) throw new Error("Not signed in.");
+  return u;
+}
+
+/** Same, for admin-only actions. */
+export async function requireAdmin(): Promise<DeskUser> {
+  const u = await requireUser();
+  if (u.role !== "admin") throw new Error("Not allowed.");
+  return u;
 }

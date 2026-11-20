@@ -6,6 +6,7 @@ Internal dashboard for MRET 1's n8n agents. Glass UI, Next.js 15, Google sign-in
 | Page | What you can do |
 |---|---|
 | Overview | Items waiting on you, live agents and workflows, runs and failures in the last 24h, team activity |
+| My to-do | Private list for the admin login only. The page and its buttons check the role on the server; anyone else gets a 404. Rows live in the n8n table desk_private_todos, never in this code. |
 | To-do | Shared list for Nicholas and Dan with a switch to mark each item done. Stored in the n8n data table desk_todos, so it's the same for both of you. |
 | Approvals | Read Content Agent edit plans (content_queue) and SEO fix lists (seo_fix_lists); approve or request changes. Approving only updates the row in n8n; nothing is posted. |
 | Team | Flow chart of how the agents talk to each other, drawn from the team roster file: you, the Orchestrator, each department's chain of hand-offs, the approval gates (with how many items wait), revisions, data feeds and reports. Live activity from n8n. Outside agents that report in are listed under it. |
@@ -25,12 +26,20 @@ Internal dashboard for MRET 1's n8n agents. Glass UI, Next.js 15, Google sign-in
    - `N8N_BASE_URL`: the n8n instance address
    - `N8N_API_KEY`: n8n > Settings > n8n API. Scopes: workflow:list, workflow:read, workflow:activate, workflow:deactivate, execution:list, execution:read, execution:retry, execution:stop, dataTableRow:read, dataTableRow:create, dataTableRow:update
    - `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`: Google Cloud OAuth client, redirect URI `https://<your-domain>/api/auth/callback/google`
-   - `ALLOWED_EMAILS`: comma-separated Google accounts allowed in
+   - `ALLOWED_EMAILS`: comma-separated Google accounts allowed in as members
+   - `ADMIN_EMAILS`: comma-separated Google accounts with admin rights (the only source of admin)
    - `NEXTAUTH_SECRET`: `openssl rand -base64 32`
    - `NEXTAUTH_URL`: the app's public URL
 3. `npm run dev` locally, or deploy to Netlify (project agent-desk-mret1) with the same env vars.
 
 `PREVIEW_MODE=1` (local only, ignored on Vercel and Netlify) skips sign-in and runs on a snapshot of the real n8n data from Nov 19, with buttons that change nothing.
+
+## Logins and roles
+
+- Who can sign in: anyone in `ALLOWED_EMAILS` or `ADMIN_EMAILS`, plus active rows in the n8n table `desk_users` (email, name, title, role, active, photo_url). A new row works on that person's next sign-in, no redeploy.
+- Roles: admin or member. Admin comes only from `ADMIN_EMAILS`; the table's role column is a label and never grants admin.
+- Every page checks the lists on the server, so taking someone off locks them out on their next page load.
+- The Google sign-in app must let the account in too: while it's in Testing mode, add each new account as a test user in Google Cloud.
 
 ## Where to change things
 

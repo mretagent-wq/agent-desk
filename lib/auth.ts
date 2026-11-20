@@ -5,7 +5,7 @@ import GoogleProvider from "next-auth/providers/google";
 import { USERS } from "./config";
 import { isPreview } from "./mode";
 import * as n8n from "./n8n";
-import { photoKey, photoSrc } from "./photo";
+import { photoKey, photoKeyForEmail, photoSrc } from "./photo";
 
 export type Role = "admin" | "member";
 export interface DeskUser { email: string; name: string; title: string; role: Role; photo: string | null; photoKey: string | null }
@@ -42,7 +42,11 @@ export async function lookupUser(email: string, fallbackName = ""): Promise<Desk
   const rowActive = row ? row.active !== false && row.active !== "false" : false;
   const admin = adminEmails().includes(e);
   if (!admin && !rowActive && !allowedEmails().includes(e)) return null;
-  const photo = str(row?.photo_url);
+  let photo = str(row?.photo_url);
+  if (!photoKey(photo) && !photo.startsWith("https://")) {
+    const k = await photoKeyForEmail(e);
+    if (k) photo = `desk:${k}`;
+  }
   return {
     email: e,
     name: str(row?.name) || fallbackName || e,

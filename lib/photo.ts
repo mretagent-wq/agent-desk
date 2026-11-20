@@ -23,15 +23,31 @@ export function photoKey(raw: string): string | null {
 
 let cache: { at: number; rows: n8n.Row[] } | null = null;
 
+async function photoRows(): Promise<n8n.Row[]> {
+  if (!n8n.n8nConfigured()) return [];
+  if (!cache || Date.now() - cache.at > 5 * 60_000) cache = { at: Date.now(), rows: await n8n.listRows(DESK_PHOTOS.tableId, 200) };
+  return cache.rows;
+}
+
+/** The desk_photos key whose owner_email is this person, for roster rows with no photo_url of their own. */
+export async function photoKeyForEmail(email: string): Promise<string | null> {
+  if (isPreview()) return null;
+  try {
+    const e = email.trim().toLowerCase();
+    const row = (await photoRows()).find((r) => typeof r.owner_email === "string" && r.owner_email.trim().toLowerCase() === e);
+    return typeof row?.photo_key === "string" && /^[a-z0-9_-]{1,40}$/i.test(row.photo_key) ? row.photo_key : null;
+  } catch {
+    return null;
+  }
+}
+
 export async function loadPhoto(key: string): Promise<{ mime: string; bytes: Buffer } | null> {
   if (isPreview()) {
     const file = process.env.PREVIEW_PHOTO_FILE;
     if (key !== "preview" || !file) return null;
     return { mime: "image/jpeg", bytes: await readFile(file) };
   }
-  if (!n8n.n8nConfigured()) return null;
-  if (!cache || Date.now() - cache.at > 5 * 60_000) cache = { at: Date.now(), rows: await n8n.listRows(DESK_PHOTOS.tableId, 200) };
-  const row = cache.rows.find((r) => r.photo_key === key);
+  const row = (await photoRows()).find((r) => r.photo_key === key);
   const data = typeof row?.data_b64 === "string" ? row.data_b64 : "";
   const mime = typeof row?.mime === "string" && /^image\/(jpeg|png|webp)$/.test(row.mime) ? row.mime : "";
   if (!data || !mime) return null;

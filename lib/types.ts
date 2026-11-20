@@ -39,8 +39,12 @@ export interface ExecutionDetail extends Execution {
 export interface AgentDef {
   id: string;
   name: string;
+  /** An id from AGENT_CATEGORIES. */
+  category: string;
   role: string;
   published: boolean;
+  /** Shown beside Live when the agent is published but held back, for example the posting hold. */
+  hold?: string;
   /** Workflows the agent calls as tools. Their runs are the agent's visible activity. */
   toolWorkflowIds: string[];
   /** Data tables the agent writes to. */

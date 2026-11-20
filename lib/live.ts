@@ -249,8 +249,10 @@ export const getAgents = cache(async (): Promise<AgentDef[]> => {
     const next: AgentDef = {
       id: c.key,
       name,
+      category: str(d.category ?? cur?.category ?? "other"),
       role: str(d.role ?? cur?.role ?? ""),
       published: d.published !== undefined ? d.published === true || d.published === "true" : cur?.published ?? false,
+      hold: d.hold !== undefined ? str(d.hold) || undefined : cur?.hold,
       toolWorkflowIds: strs(d.toolWorkflowIds) ?? cur?.toolWorkflowIds ?? [],
       tables: strs(d.tables) ?? cur?.tables ?? [],
       subAgents: strs(d.subAgents) ?? cur?.subAgents,

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { IconShield } from "@/components/Icons";
 import { LivePill } from "@/components/Status";
-import { AGENTS_SYNCED_AT, EXTERNAL_INTAKE } from "@/lib/config";
+import { AGENT_CATEGORIES, AGENTS_SYNCED_AT, EXTERNAL_INTAKE } from "@/lib/config";
 import { getAgents } from "@/lib/live";
 import { ago, when } from "@/lib/format";
 import { agentActivity, isShared, n8nLink, nowFor, snapshot, statsByWorkflow, wfName } from "@/lib/view";
@@ -17,18 +17,7 @@ export default async function Agents() {
   for (const e of [...s.external].sort((a, b) => b.at.localeCompare(a.at))) outside.set(e.agent, [...(outside.get(e.agent) ?? []), e]);
   const tone = (st: string) => (st === "failed" ? "bad" : st === "needs_approval" ? "warn" : st === "done" ? "ok" : "info");
 
-  return (
-    <>
-      <header className="top">
-        <div>
-          <div className="eyebrow">Dan&apos;s agent department</div>
-          <h1>Agents</h1>
-          <p>Activity counts runs of each agent&apos;s own tool workflows; shared tools are listed but not counted. Live or draft status was last synced {when(AGENTS_SYNCED_AT)}.</p>
-        </div>
-      </header>
-
-      <section className="grid three">
-        {AGENTS.map((a) => {
+  const card = (a: (typeof AGENTS)[number]) => {
           const tools = a.toolWorkflowIds.map((id) => ({ id, w: byId.get(id), st: stats.get(id) }));
           const { runs24, runs7, fails7, last } = agentActivity(AGENTS, a.toolWorkflowIds, stats);
           const link = n8nLink(s, "/");
@@ -39,16 +28,24 @@ export default async function Agents() {
                 <span className="orb">{a.name.charAt(0)}</span>
                 <div style={{ flex: 1 }}>
                   <h3>{a.name}</h3>
-                  <div className="muted small" style={{ marginTop: 4 }}>Last active {ago(last, now)}</div>
+                  <div className="muted small" style={{ marginTop: 4 }}>{a.toolWorkflowIds.length ? <>Last active {ago(last, now)}</> : "Activity not tracked"}</div>
                 </div>
-                <LivePill live={a.published} draftLabel="Draft" />
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 6 }}>
+                  <LivePill live={a.published} draftLabel="Draft" />
+                  {a.hold ? <span className="pill warn">{a.hold}</span> : null}
+                </div>
               </div>
               <div className="role">{a.role}</div>
+              {a.toolWorkflowIds.length ? (
               <div className="stats">
                 <div className="stat"><div className="k">Today</div><div className="v">{runs24}</div></div>
                 <div className="stat"><div className="k">7 days</div><div className="v">{runs7}</div></div>
                 <div className="stat"><div className="k">Failed</div><div className="v" style={{ color: fails7 ? "var(--bad)" : undefined }}>{fails7}</div></div>
               </div>
+              ) : null}
+              {a.toolWorkflowIds.length === 0 ? (
+                <div className="muted small">Works from the shared data tables only, so the desk can&apos;t count its runs yet. n8n doesn&apos;t share agent chats through its API.</div>
+              ) : (
               <div>
                 <div className="group-label" style={{ marginTop: 0 }}>Tools</div>
                 <div className="tools">
@@ -62,6 +59,7 @@ export default async function Agents() {
                   ))}
                 </div>
               </div>
+              )}
               <div className="small sub">
                 Writes to {a.tables.join(", ")}
                 {subs.length ? <> · Hands work to {subs.join(" and ")}</> : null}
@@ -73,12 +71,38 @@ export default async function Agents() {
                 ) : (
                   <span className="btn sm" aria-disabled title="Connect n8n to link out">Open n8n</span>
                 )}
-                <Link className="btn sm ghost" href={`/runs?agent=${a.id}`}>Tool runs</Link>
+                {a.toolWorkflowIds.length ? <Link className="btn sm ghost" href={`/runs?agent=${a.id}`}>Tool runs</Link> : null}
               </div>
             </article>
           );
-        })}
-      </section>
+  };
+  const known = new Set(AGENT_CATEGORIES.map((c) => c.id));
+  const groups = [
+    ...AGENT_CATEGORIES.map((c) => ({ ...c, agents: AGENTS.filter((a) => a.category === c.id) })),
+    { id: "other", label: "Other", blurb: "Agents not filed under a team yet.", agents: AGENTS.filter((a) => !known.has(a.category)) },
+  ].filter((g) => g.agents.length);
+
+  return (
+    <>
+      <header className="top">
+        <div>
+          <div className="eyebrow">Dan&apos;s agent department</div>
+          <h1>Agents</h1>
+          <p>{AGENTS.length} agents, {AGENTS.filter((a) => a.published).length} live and {AGENTS.filter((a) => !a.published).length} in draft. Activity counts runs of each agent&apos;s own tool workflows; shared tools are listed but not counted. Live or draft status was last synced {when(AGENTS_SYNCED_AT)}.</p>
+        </div>
+      </header>
+
+      {groups.map((g) => (
+        <section key={g.id}>
+          <div className="sect-head">
+            <h2>{g.label} <span className="muted" style={{ fontSize: 15 }}>{g.agents.length}</span></h2>
+            <span className="muted small">{g.blurb}</span>
+          </div>
+          <div className="grid three">
+            {g.agents.map((a) => card(a))}
+          </div>
+        </section>
+      ))}
 
       <section>
         <div className="sect-head">

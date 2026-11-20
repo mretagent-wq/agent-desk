@@ -2,15 +2,25 @@ import type { AgentDef } from "./types";
 
 /**
  * The n8n public API (checked against n8n 2.48.6) has no endpoints for first-class Agents,
- * so the team is listed here. IDs come from the n8n instance. When an agent is added or
- * published in n8n, update this list.
+ * so the team is listed here, read from the n8n instance. When an agent is added or published
+ * in n8n, update this list (or add an "agent" row to desk_changes, see lib/live.ts).
  */
-export const AGENTS_SYNCED_AT = "2026-11-19T14:40:00Z";
+export const AGENTS_SYNCED_AT = "2026-11-20T14:22:00Z";
+
+/** How the Agents page groups the team, in this order. */
+export const AGENT_CATEGORIES: { id: string; label: string; blurb: string }[] = [
+  { id: "command", label: "Command", blurb: "Runs the team: hires agents and answers questions about the work." },
+  { id: "content", label: "Content team", blurb: "Dan's social pipeline, in the order a post moves through it. Nicholas and Dan approve every post." },
+  { id: "sites", label: "Websites and SEO", blurb: "Checks Dan's project sites." },
+];
+
+const CONTENT_GRADIENT: [string, string] = ["#1E3A8A", "#C9A227"];
 
 export const AGENTS: AgentDef[] = [
   {
     id: "SBV7uj3qQmeix4TS",
     name: "Hiring Manager",
+    category: "command",
     role: "Finds open-source agents on GitHub, safety-scans them, recommends hires and hands work to the team.",
     published: true,
     toolWorkflowIds: ["wzEIP8qhKWO1BKu6", "BzRsxXtJI9isjmV7"],
@@ -20,18 +30,98 @@ export const AGENTS: AgentDef[] = [
     gradient: ["#FF5A36", "#FFA24C"],
   },
   {
+    id: "ge5P1HLaR1GrM0JE",
+    name: "Team Brain (voice)",
+    category: "command",
+    role: "Answers Nicholas out loud about the team, projects, plans and results, from the shared tables.",
+    published: true,
+    toolWorkflowIds: [],
+    tables: ["team_knowledge (dictated notes only)"],
+    outward: "Reads only. Saves a note only when you ask it to. $5 a month cap.",
+    gradient: ["#0C285A", "#BC955C"],
+  },
+  {
+    id: "x1UKbOROpIYc2gIz",
+    name: "Marketing Strategist",
+    category: "content",
+    role: "Decides what gets made, for whom and when, and writes the weekly briefs and the monthly plan.",
+    published: true,
+    toolWorkflowIds: ["vUVCZKPCUIXEINrM"],
+    tables: ["strategy_briefs"],
+    outward: "Plans only. Never posts.",
+    gradient: ["#0C285A", "#BC955C"],
+  },
+  {
+    id: "TL4kEEJ6sCpEe5om",
+    name: "Platform Strategist",
+    category: "content",
+    role: "Turns each brief into an Instagram spec: length, slot, hook formula, cover, hashtags and CTA.",
+    published: true,
+    toolWorkflowIds: [],
+    tables: ["strategy_briefs"],
+    outward: "Plans only. Never posts.",
+    gradient: CONTENT_GRADIENT,
+  },
+  {
+    id: "v0PiA0gSXIz2vA8m",
+    name: "Copywriter",
+    category: "content",
+    role: "Writes hooks, on-screen cards, the caption and CTA in Dan's calm advisor voice, and lists every claim.",
+    published: true,
+    toolWorkflowIds: [],
+    tables: ["strategy_briefs"],
+    outward: "Never posts. Every fact goes to the accuracy check.",
+    gradient: CONTENT_GRADIENT,
+  },
+  {
     id: "10dJtM9xXNJyF7Xy",
     name: "Content Agent",
+    category: "content",
     role: "Plans Reels from Dan's Dropbox footage, fact-checks prices and milestones, saves edit plans for approval.",
     published: true,
     toolWorkflowIds: ["177ZfVRNuU1IYo8q", "Y62V29SQzxZ7m0vO", "vUVCZKPCUIXEINrM"],
-    tables: ["content_queue", "footage_shot_log"],
+    tables: ["content_queue"],
     outward: "Never posts. Every plan waits in the content queue.",
     gradient: ["#C9A86A", "#F2D9A0"],
   },
   {
+    id: "bvLb8cj9tdZOwzGC",
+    name: "Sound Designer",
+    category: "content",
+    role: "Adds the audio plan to each video: mood, BPM, cuts on the beat, the licensed track and levels.",
+    published: true,
+    toolWorkflowIds: [],
+    tables: ["content_queue"],
+    outward: "Plans only. Licensed or free music only.",
+    gradient: CONTENT_GRADIENT,
+  },
+  {
+    id: "zGxGyliQXwwodOO2",
+    name: "Editor",
+    category: "content",
+    role: "Re-checks every claim at its source and scores each piece; sends exact fixes back or passes it.",
+    published: true,
+    toolWorkflowIds: ["Y62V29SQzxZ7m0vO", "vUVCZKPCUIXEINrM"],
+    tables: ["content_queue"],
+    outward: "Never approves for posting. Only you and Dan do.",
+    gradient: CONTENT_GRADIENT,
+  },
+  {
+    id: "ymtbfCusbQV2L7st",
+    name: "Poster",
+    category: "content",
+    role: "Prepares the schedule for pieces you and Dan both approved: slot, final caption, cover and checklist.",
+    published: true,
+    hold: "Posting on hold",
+    toolWorkflowIds: [],
+    tables: ["content_queue"],
+    outward: "Posting hold is on, and it has no tool that can post. Nothing goes out until you lift it.",
+    gradient: CONTENT_GRADIENT,
+  },
+  {
     id: "DQTeX0zXZXN382n9",
     name: "SEO Agent",
+    category: "sites",
     role: "Audits Dan's project sites for SEO, speed and broken pages, and ranks fixes.",
     published: false,
     toolWorkflowIds: ["ny0Kn4TfRrgeeHKD", "vUVCZKPCUIXEINrM"],

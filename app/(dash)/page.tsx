@@ -1,3 +1,4 @@
+import { AgentAvatar } from "@/components/AgentAvatar";
 import Link from "next/link";
 import Bars from "@/components/Bars";
 import { LivePill, RunPill } from "@/components/Status";
@@ -104,7 +105,7 @@ export default async function Overview() {
                 const { runs24: runs, last } = agentActivity(AGENTS, a.toolWorkflowIds, stats);
                 return (
                   <div key={a.id} className="li">
-                    <span className="orb" style={{ width: 32, height: 32, borderRadius: 8, fontSize: 14, ["--c1" as string]: a.gradient[0] }}>{a.name.charAt(0)}</span>
+                    <AgentAvatar id={a.id} name={a.name} category={a.category} size={34} />
                     <div className="grow">
                       <div className="name">{a.name}</div>
                       <div className="meta">{runs} tool calls today · last {ago(last, now)}</div>

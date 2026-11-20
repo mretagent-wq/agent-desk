@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AgentAvatar } from "@/components/AgentAvatar";
 import { IconShield } from "@/components/Icons";
 import { LivePill } from "@/components/Status";
 import { AGENT_CATEGORIES, AGENTS_SYNCED_AT, EXTERNAL_INTAKE } from "@/lib/config";
@@ -25,7 +26,7 @@ export default async function Agents() {
           return (
             <article key={a.id} className="agent glass" style={{ ["--c1" as string]: a.gradient[0], ["--c2" as string]: a.gradient[1] }}>
               <div className="agent-top">
-                <span className="orb">{a.name.charAt(0)}</span>
+                <AgentAvatar id={a.id} name={a.name} category={a.category} size={48} />
                 <div style={{ flex: 1 }}>
                   <h3>{a.name}</h3>
                   <div className="muted small" style={{ marginTop: 4 }}>{a.toolWorkflowIds.length ? <>Last active {ago(last, now)}</> : "Activity not tracked"}</div>

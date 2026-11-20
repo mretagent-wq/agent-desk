@@ -30,7 +30,9 @@
   /* One accent: brass, for approvals and gates */
   --gold: #c8a66a;
   --gold-2: #dcc08a;
-  --gold-wash: rgba(200, 166, 106, 0.1);
+  --gold-wash: rgba(var(--gold-rgb), 0.1);
+  --gold-rgb: 200, 166, 106;
+  --on-gold: #17130c;
   /* Status */
   --ok: #4cc38a;
   --bad: #e5484d;
@@ -143,13 +145,13 @@ a.kpi:hover { background: var(--raised); }
 .pill.bad { color: var(--bad); border-color: rgba(229, 72, 77, 0.3); }
 .pill.warn { color: var(--warn); }
 .pill.info { color: var(--info); }
-.pill.gold { color: var(--gold-2); border-color: rgba(200, 166, 106, 0.3); }
+.pill.gold { color: var(--gold-2); border-color: rgba(var(--gold-rgb), 0.3); }
 
 .btn { appearance: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 32px; padding: 0 12px; border-radius: var(--r-sm); border: 1px solid var(--line-2); background: var(--raised); color: var(--ink); font: 500 13px var(--sans); cursor: pointer; text-decoration: none; transition: background 150ms var(--ease), border-color 150ms var(--ease), transform 120ms var(--ease); }
 .btn:hover { background: var(--raised-2); }
 .btn:active { transform: scale(0.98); }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-.btn.primary { background: var(--gold); color: #17130c; border-color: var(--gold); }
+.btn.primary { background: var(--gold); color: var(--on-gold); border-color: var(--gold); }
 .btn.primary:hover { background: var(--gold-2); border-color: var(--gold-2); }
 .btn.danger { color: var(--bad); border-color: rgba(229, 72, 77, 0.3); background: transparent; }
 .btn.ghost { border-color: transparent; background: transparent; color: var(--ink-2); }
@@ -315,11 +317,11 @@ details.more h4 { margin: 12px 0 0; font-size: 12px; font-weight: 500; color: va
 .node-gate svg { flex: none; color: var(--gold); }
 .node-gate span { flex: 1 1 110px; min-width: 0; }
 .gate-count { flex: none; font: 500 11px var(--mono); padding: 1px 6px; border-radius: 6px; color: var(--ink-3); border: 1px solid var(--line); text-decoration: none; font-variant-numeric: tabular-nums; }
-.gate-count.on { color: #17130c; background: var(--gold); border-color: var(--gold); }
+.gate-count.on { color: var(--on-gold); background: var(--gold); border-color: var(--gold); }
 .node-esc { font-size: 11px; color: var(--ink-2); }
 .node-note { font-size: 11px; color: var(--warn); line-height: 1.4; }
 .back { margin-top: auto; display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--ink-3); padding: 8px 10px; border-radius: var(--r-sm); border: 1px dashed var(--line-2); }
-.back.gated { color: var(--gold-2); border-color: rgba(200, 166, 106, 0.35); background: var(--gold-wash); }
+.back.gated { color: var(--gold-2); border-color: rgba(var(--gold-rgb), 0.35); background: var(--gold-wash); }
 .back .arrow { font-size: 13px; color: var(--gold); }
 .back b { color: var(--ink); font-weight: 500; white-space: nowrap; }
 .legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 12px; color: var(--ink-3); }
@@ -375,7 +377,7 @@ code { font: 12px var(--mono); padding: 1px 6px; border-radius: 6px; background:
 .conn.loose { padding-top: 8px; }
 .conn.loose .conn-label { font-size: 11px; }
 /* Signature: approval gates in brass */
-.gate-node { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: var(--r-md); border: 1px solid rgba(200, 166, 106, 0.4); background: var(--gold-wash); }
+.gate-node { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border-radius: var(--r-md); border: 1px solid rgba(var(--gold-rgb), 0.4); background: var(--gold-wash); }
 .gate-name { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 13px; color: var(--gold-2); }
 .gate-name svg { color: var(--gold); flex: none; }
 .gate-who { font-size: 12px; color: var(--ink); }
@@ -409,7 +411,7 @@ code { font: 12px var(--mono); padding: 1px 6px; border-radius: 6px; background:
 .pipeline li b { font-weight: 500; font-size: 14px; line-height: 1.25; }
 .pipeline li .pill { align-self: flex-start; height: 20px; padding: 0 6px; font-size: 11px; }
 .pipeline li.planned, .pipeline li.missing, .pipeline li.hiring { border-style: dashed; border-color: var(--line-2); }
-.pipeline li.gate { border-color: rgba(200, 166, 106, 0.4); background: var(--gold-wash); }
+.pipeline li.gate { border-color: rgba(var(--gold-rgb), 0.4); background: var(--gold-wash); }
 .pipe-stage { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--ink-3); }
 .pipe-stage::before { content: ""; width: 6px; height: 6px; border-radius: 2px; background: var(--accent, var(--ink-3)); }
 .pipeline li.gate .pipe-stage { color: var(--gold-2); }
@@ -511,7 +513,7 @@ code { font: 12px var(--mono); padding: 1px 6px; border-radius: 6px; background:
 
 /* Shoreline layer: frosted glass over sand and light-blue water, Apple-style flow.
    Text sits on tinted glass so it stays readable over the bright photo.
-   Brass still marks only approvals and gates. */
+   Turquoise marks actions; sand marks only approvals and gates. */
 :root {
   --photo: url("https://images.unsplash.com/photo-1764319088750-149fb68b9df1?auto=format&fit=crop&w=2400&q=72");
   --photo-sm: url("https://images.unsplash.com/photo-1764319088750-149fb68b9df1?auto=format&fit=crop&w=1200&q=70");
@@ -527,6 +529,18 @@ code { font: 12px var(--mono); padding: 1px 6px; border-radius: 6px; background:
   --line: rgba(255, 255, 255, 0.14);
   --line-2: rgba(255, 255, 255, 0.24);
   --info: #8fd6ec;
+  /* Beach palette (Nov 20, at Nicholas's request): turquoise from the water for actions,
+     sand from the beach for approvals and gates, so approvals still stand apart. */
+  --sea: #5cc9cc;
+  --sea-2: #8ee3e2;
+  --sea-rgb: 92, 201, 204;
+  --on-sea: #04292d;
+  --gold: #e6d1a3;
+  --gold-2: #f4e7c8;
+  --gold-rgb: 230, 209, 163;
+  --gold-wash: rgba(230, 209, 163, 0.14);
+  --on-gold: #2b2210;
+  --ok: #5fd8a8;
   --r-lg: 22px;
   --r-md: 14px;
   --r-sm: 10px;
@@ -584,24 +598,28 @@ a.glass:hover, .kpi.glass:hover, .agent.glass:hover { transform: translateY(-3px
 /* Controls, softer and rounder */
 .nav a { height: 36px; border-radius: 12px; transition: background 260ms var(--ease), color 260ms var(--ease), transform 260ms var(--ease); }
 .nav a:hover { background: rgba(255, 255, 255, 0.10); }
-.nav a.on { background: rgba(255, 255, 255, 0.18); color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+.nav a.on { background: rgba(var(--sea-rgb), 0.26); color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 0 0 1px rgba(var(--sea-rgb), 0.35); }
 .nav a:active { transform: scale(0.98); }
 .btn { border-radius: 999px; height: 34px; padding: 0 16px; background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.22); transition: background 260ms var(--ease), transform 300ms var(--spring); }
 .btn.sm { padding: 0 12px; }
 .btn:hover { background: rgba(255, 255, 255, 0.22); }
 .btn:active { transform: scale(0.96); }
-.btn.primary { background: var(--gold); border-color: transparent; color: #1b1407; }
-.btn.primary:hover { background: var(--gold-2); }
+.btn.primary { background: linear-gradient(180deg, var(--sea-2), var(--sea)); border-color: transparent; color: var(--on-sea); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 8px 22px -10px rgba(var(--sea-rgb), 0.8); }
+.btn.primary:hover { background: linear-gradient(180deg, #a8ecea, var(--sea-2)); }
+:focus-visible { outline-color: var(--sea-2); }
 .btn.ghost { background: transparent; }
 .chip { border-radius: 999px; }
-.chip.on { background: rgba(255, 255, 255, 0.18); }
+.chip.on { background: rgba(var(--sea-rgb), 0.24); border-color: rgba(var(--sea-rgb), 0.4); }
+.switch.on { background: rgba(var(--sea-rgb), 0.45); border-color: rgba(var(--sea-rgb), 0.7); }
 .pill { border-radius: 999px; }
 .input { border-radius: 12px; background: rgba(var(--tide), 0.30); border-color: rgba(255, 255, 255, 0.22); }
-.input:focus { border-color: rgba(255, 255, 255, 0.5); outline: none; box-shadow: 0 0 0 4px rgba(143, 214, 236, 0.22); }
+.input:focus { border-color: rgba(var(--sea-rgb), 0.7); outline: none; box-shadow: 0 0 0 4px rgba(var(--sea-rgb), 0.22); }
 .stat, .pipeline li, .setup li, details.more pre, code { background: rgba(var(--tide), 0.30); border-color: rgba(255, 255, 255, 0.12); }
 .node { background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .node.you, .node.human { background: rgba(255, 255, 255, 0.13); }
 .orb { background: rgba(255, 255, 255, 0.14); border-color: rgba(255, 255, 255, 0.2); }
+.avatar { flex: none; display: block; border-radius: 30%; box-shadow: 0 10px 24px -12px rgba(4, 20, 30, 0.75); transition: transform 420ms var(--spring); }
+.agent.glass:hover .avatar { transform: rotate(-4deg) scale(1.04); }
 .switch { background: rgba(255, 255, 255, 0.16); }
 .dialog { border-radius: 24px; background: rgba(var(--tide), 0.62); backdrop-filter: blur(36px) saturate(180%); -webkit-backdrop-filter: blur(36px) saturate(180%); border: 1px solid rgba(255, 255, 255, 0.2); animation: pop 420ms var(--spring); }
 .scrim { background: rgba(var(--tide), 0.3); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }

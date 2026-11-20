@@ -504,3 +504,43 @@ code { font: 12px var(--mono); padding: 1px 6px; border-radius: 6px; background:
   .table .desc { white-space: normal; max-width: none; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
   .table .name { white-space: normal; overflow-wrap: anywhere; }
 }
+
+/* Glass layer, at Nicholas's request: frosted panels over warm light.
+   Neutral highlights and shadows only, so brass still means "needs a yes". */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(1000px 680px at 8% -8%, rgba(200, 166, 106, 0.22), transparent 64%),
+    radial-gradient(820px 620px at 96% 10%, rgba(150, 170, 175, 0.10), transparent 62%),
+    radial-gradient(1100px 760px at 55% 112%, rgba(200, 166, 106, 0.09), transparent 62%);
+}
+.shell, .login { position: relative; z-index: 1; }
+.glass {
+  background: linear-gradient(180deg, rgba(255, 246, 232, 0.075), rgba(255, 246, 232, 0.03));
+  border-color: rgba(255, 246, 232, 0.1);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 16px 40px -20px rgba(0, 0, 0, 0.75);
+}
+.glass::before {
+  content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; padding: 1px;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 38%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.side.glass { background: rgba(255, 246, 232, 0.025); box-shadow: inset -1px 0 0 rgba(255, 246, 232, 0.08); }
+.side.glass::before { display: none; }
+.nav a:hover { background: rgba(255, 246, 232, 0.05); }
+.nav a.on { background: rgba(255, 246, 232, 0.09); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07); }
+.stat, .pipeline li, .setup li, details.more pre, .input, code { background: rgba(0, 0, 0, 0.22); }
+.node { background: rgba(255, 246, 232, 0.04); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.node.you, .node.human { background: rgba(255, 246, 232, 0.08); }
+.btn { background: rgba(255, 246, 232, 0.07); }
+.btn:hover { background: rgba(255, 246, 232, 0.12); }
+.btn.primary { background: var(--gold); }
+.btn.primary:hover { background: var(--gold-2); }
+.chip.on { background: rgba(255, 246, 232, 0.09); }
+.dialog { background: rgba(40, 36, 32, 0.78); backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px); border: 1px solid rgba(255, 246, 232, 0.12); }
+.scrim { backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+.toast { background: rgba(40, 36, 32, 0.78); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+@media (max-width: 900px) { .side.glass { background: rgba(13, 12, 11, 0.7); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); } }

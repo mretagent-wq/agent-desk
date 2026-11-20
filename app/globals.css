@@ -250,7 +250,7 @@ details.more h4 { margin: 12px 0 0; font-size: 12px; font-weight: 500; color: va
   .side.glass { position: sticky; top: 0; z-index: 20; height: auto; flex-direction: row; align-items: center; padding: 8px 12px; overflow-x: auto; border-right: 0; border-bottom: 1px solid var(--line); }
   .brand { display: block; padding: 0 8px 0 4px; }
   .brand::before { display: none; }
-  .brand b { font-size: 20px; }
+  .brand b { font-size: 20px; white-space: nowrap; }
   .brand span, .side-foot, .nav .label-long { display: none; }
   .nav { flex-direction: row; gap: 2px; }
   .nav a { height: 32px; padding: 0 10px; white-space: nowrap; }

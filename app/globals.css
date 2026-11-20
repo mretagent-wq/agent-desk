@@ -645,3 +645,51 @@ a.glass:hover, .kpi.glass:hover, .agent.glass:hover { transform: translateY(-3px
   .main > *, .dialog, .toast { animation: none; }
   .glass, .btn, .nav a { transition: none; }
 }
+
+/* Screen toggle in the sidebar: Auto, Laptop, Wide (Nov 20) */
+.viewtog { margin: 0 0 12px; }
+.viewtog-label { margin: 0 0 6px; font-size: 12px; color: var(--ink-3); }
+.viewtog-label span { color: var(--ink-3); }
+.seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; padding: 3px; border-radius: 999px; background: rgba(var(--tide), 0.34); border: 1px solid rgba(255, 255, 255, 0.16); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10); }
+.seg button { height: 26px; padding: 0 6px; border: 0; border-radius: 999px; background: transparent; color: var(--ink-2); font: 500 12px var(--sans); cursor: pointer; transition: background 260ms var(--ease), color 260ms var(--ease), transform 300ms var(--spring); }
+.seg button:hover { color: var(--ink); background: rgba(255, 255, 255, 0.08); }
+.seg button:active { transform: scale(0.96); }
+.seg button.on { background: linear-gradient(180deg, var(--sea-2), var(--sea)); color: var(--on-sea); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 6px 16px -8px rgba(var(--sea-rgb), 0.8); }
+
+/* Wide layout: big and ultrawide monitors fill edge to edge. Applied by Auto on windows 1800px and up, or by Wide. */
+@media (min-width: 901px) {
+  [data-layout="wide"] .main { max-width: none; padding: 40px 48px 56px; gap: 24px; }
+  [data-layout="wide"] .shell { grid-template-columns: 272px minmax(0, 1fr); }
+  [data-layout="wide"] .grid { gap: 24px; }
+  [data-layout="wide"] .agent-grid { grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); }
+}
+@media (min-width: 2400px) {
+  [data-layout="wide"] body { font-size: 15px; }
+  [data-layout="wide"] .main { padding: 48px 64px 64px; gap: 28px; }
+  [data-layout="wide"] .shell { grid-template-columns: 300px minmax(0, 1fr); }
+  [data-layout="wide"] .side.glass { padding: 24px 16px; }
+  [data-layout="wide"] .brand b { font-size: 24px; }
+  [data-layout="wide"] .nav a { height: 40px; font-size: 15px; }
+  [data-layout="wide"] .top h1 { font-size: 46px; }
+  [data-layout="wide"] .top p { font-size: 15px; }
+  [data-layout="wide"] .card h2 { font-size: 20px; }
+  [data-layout="wide"] .sect-head h2 { font-size: 23px; }
+  [data-layout="wide"] .agent h3 { font-size: 19px; }
+  [data-layout="wide"] .agent .role { font-size: 14px; }
+  [data-layout="wide"] .agent-grid { grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); }
+}
+@media (min-width: 3200px) {
+  [data-layout="wide"] body { font-size: 16px; }
+  [data-layout="wide"] .main { padding: 56px 80px 72px; gap: 32px; }
+  [data-layout="wide"] .shell { grid-template-columns: 320px minmax(0, 1fr); }
+  [data-layout="wide"] .nav a { height: 44px; font-size: 16px; }
+  [data-layout="wide"] .top h1 { font-size: 54px; }
+  [data-layout="wide"] .card h2 { font-size: 22px; }
+  [data-layout="wide"] .sect-head h2 { font-size: 25px; }
+  [data-layout="wide"] .agent h3 { font-size: 20px; }
+  [data-layout="wide"] .agent-grid { grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+}
+@media (min-width: 901px) {
+  /* Side-by-side cards keep their own height on wide screens instead of stretching to the taller one */
+  [data-layout="wide"] .two { align-items: start; }
+}

@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ViewToggle from "./ViewToggle";
 import { IconAgents, IconContent, IconFlows, IconHome, IconInbox, IconRuns, IconTeam, IconTodo } from "./Icons";
 
 export default function Sidebar({ pending, who, preview }: { pending: number; who: string; preview: boolean }) {
@@ -34,6 +35,7 @@ export default function Sidebar({ pending, who, preview }: { pending: number; wh
         })}
       </nav>
       <div className="side-foot">
+        <ViewToggle />
         <div className="who">{who}</div>
         {preview ? <div>Local preview</div> : <a href="/api/auth/signout">Sign out</a>}
       </div>

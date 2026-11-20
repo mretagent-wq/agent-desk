@@ -99,7 +99,7 @@ export default async function Agents() {
             <h2>{g.label} <span className="muted" style={{ fontSize: 15 }}>{g.agents.length}</span></h2>
             <span className="muted small">{g.blurb}</span>
           </div>
-          <div className="grid three">
+          <div className="grid three agent-grid">
             {g.agents.map((a) => card(a))}
           </div>
         </section>

@@ -66,7 +66,7 @@ const DEPT_COLOR: Record<string, string> = {
 };
 const FALLBACK = ["#e6c88f", "#8fd0c0", "#b7a6f0", "#f0a3b8", "#a9d58b"];
 export function deptColor(id: string | undefined): string {
-  if (!id) return "var(--gold)";
+  if (!id) return "var(--ink-3)";
   return DEPT_COLOR[id] ?? FALLBACK[Math.abs([...id].reduce((n, c) => n + c.charCodeAt(0), 0)) % FALLBACK.length];
 }
 

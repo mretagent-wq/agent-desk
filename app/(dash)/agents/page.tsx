@@ -36,7 +36,7 @@ export default async function Agents() {
           return (
             <article key={a.id} className="agent glass" style={{ ["--c1" as string]: a.gradient[0], ["--c2" as string]: a.gradient[1] }}>
               <div className="agent-top">
-                <span className="orb" />
+                <span className="orb">{a.name.charAt(0)}</span>
                 <div style={{ flex: 1 }}>
                   <h3>{a.name}</h3>
                   <div className="muted small" style={{ marginTop: 4 }}>Last active {ago(last, now)}</div>

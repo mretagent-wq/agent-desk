@@ -5,11 +5,6 @@ import { getAgents, recentChanges } from "@/lib/live";
 import { ago, duration } from "@/lib/format";
 import { agentActivity, nowFor, snapshot, statsByWorkflow, wfName } from "@/lib/view";
 
-function greeting(now: number) {
-  const h = Number(new Intl.DateTimeFormat("en-US", { timeZone: "America/New_York", hour: "numeric", hour12: false }).format(new Date(now)));
-  return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
-}
-
 const CHANGE_KIND: Record<string, string> = {"role": "Role", "department": "Department", "gate": "Gate", "link": "Hand-off", "content_team": "Content team", "agent": "Agent", "post": "Post", "video": "Video", "plan": "Plan"};
 
 export default async function Overview() {
@@ -27,8 +22,8 @@ export default async function Overview() {
     <>
       <header className="top">
         <div>
-          <div className="eyebrow">{dateLabel}</div>
-          <h1>{greeting(now)}</h1>
+          <div className="eyebrow">Overview</div>
+          <h1>{dateLabel}</h1>
           <p>
             {s.approvals.length
               ? `${s.approvals.length} item${s.approvals.length === 1 ? "" : "s"} waiting on you. ${fails.length ? `${fails.length} failed run${fails.length === 1 ? "" : "s"} today.` : "No failed runs today."}`
@@ -109,7 +104,7 @@ export default async function Overview() {
                 const { runs24: runs, last } = agentActivity(AGENTS, a.toolWorkflowIds, stats);
                 return (
                   <div key={a.id} className="li">
-                    <span className="orb" style={{ width: 34, height: 34, borderRadius: 11, ["--c1" as string]: a.gradient[0], ["--c2" as string]: a.gradient[1] }} />
+                    <span className="orb" style={{ width: 32, height: 32, borderRadius: 8, fontSize: 14, ["--c1" as string]: a.gradient[0] }}>{a.name.charAt(0)}</span>
                     <div className="grow">
                       <div className="name">{a.name}</div>
                       <div className="meta">{runs} tool calls today · last {ago(last, now)}</div>

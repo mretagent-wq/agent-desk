@@ -12,7 +12,7 @@ const str = (v: unknown) => (v === null || v === undefined ? "" : String(v));
 const ROLE_STATUS: Record<RoleStatus, [string, string]> = {
   live: ["ok", "Live"],
   draft: ["warn", "Draft"],
-  hiring: ["gold", "Hiring"],
+  hiring: ["hire", "Hiring"],
   planned: ["", "Planned"],
   external: ["info", "Outside n8n"],
   active: ["info", "Person"],

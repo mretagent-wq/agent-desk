@@ -11,7 +11,7 @@ import { agentActivity, isShared, n8nLink, nowFor, snapshot, statsByWorkflow } f
 const STATUS: Record<RoleStatus, [string, string]> = {
   live: ["ok", "Live"],
   draft: ["warn", "Draft"],
-  hiring: ["gold", "Hiring"],
+  hiring: ["hire", "Hiring"],
   planned: ["", "Planned"],
   external: ["info", "Outside n8n"],
   active: ["info", "Person"],
@@ -167,7 +167,7 @@ export default async function TeamPage() {
         </div>
         <div className="glass card">
           <div className="k">Approval gates</div>
-          <p>Anything that posts, sends, spends, hires or changes a site stops at a gold gate for a person. {s.approvals.length ? <Link href="/approvals">{s.approvals.length} waiting now.</Link> : "Nothing waiting now."}</p>
+          <p>Anything that posts, sends, spends, hires or changes a site stops at a brass gate for a person. {s.approvals.length ? <Link href="/approvals">{s.approvals.length} waiting now.</Link> : "Nothing waiting now."}</p>
         </div>
       </section>
 
@@ -215,7 +215,7 @@ export default async function TeamPage() {
         <div className="legend">
           <span><span className="dot ok" />Live in n8n</span>
           <span><span className="dot warn" />Draft, not running</span>
-          <span><span className="dot gold" />Being hired</span>
+          <span><span className="dot hire" />Being hired</span>
           <span><span className="dot" />Planned, not built</span>
           <span><span className="dot info" />Person or outside n8n</span>
           <span><IconShield />Waits for a person</span>

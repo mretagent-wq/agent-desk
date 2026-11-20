@@ -11,8 +11,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body>
-        <div className="aurora" aria-hidden><i /><i /><i /></div>
-        <div className="grain" aria-hidden />
         {children}
       </body>
     </html>

@@ -23,7 +23,7 @@ export function RunPill({ status }: { status: ExecStatus }) {
 
 export function LivePill({ live, draftLabel = "Paused" }: { live: boolean; draftLabel?: string }) {
   return live ? (
-    <span className="pill ok"><span className="dot ok pulse" />Live</span>
+    <span className="pill ok"><span className="dot ok" />Live</span>
   ) : (
     <span className="pill"><span className="dot" />{draftLabel}</span>
   );

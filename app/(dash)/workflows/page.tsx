@@ -3,11 +3,12 @@ import { WorkflowSwitch } from "@/components/Controls";
 import { LivePill } from "@/components/Status";
 import { groupOf, WORKFLOW_GROUPS } from "@/lib/config";
 import { ago, pct } from "@/lib/format";
+import { getAgents } from "@/lib/live";
 import { agentsUsing, n8nLink, nowFor, snapshot, statsByWorkflow } from "@/lib/view";
 
 export default async function Workflows({ searchParams }: { searchParams: Promise<{ show?: string }> }) {
   const { show = "all" } = await searchParams;
-  const s = await snapshot();
+  const [s, agents] = await Promise.all([snapshot(), getAgents()]);
   const now = nowFor(s);
   const stats = statsByWorkflow(s);
   const list = s.workflows.filter((w) => (show === "live" ? w.active : show === "paused" ? !w.active : true));
@@ -55,7 +56,7 @@ export default async function Workflows({ searchParams }: { searchParams: Promis
                   const link = n8nLink(s, `/workflow/${w.id}`);
                   return (
                     <tr key={w.id}>
-                      <td><WorkflowSwitch id={w.id} name={w.name} active={w.active} usedBy={agentsUsing(w.id)} /></td>
+                      <td><WorkflowSwitch id={w.id} name={w.name} active={w.active} usedBy={agentsUsing(agents, w.id)} /></td>
                       <td>
                         <div className="name">{w.name}</div>
                         {w.description && <div className="desc">{w.description}</div>}

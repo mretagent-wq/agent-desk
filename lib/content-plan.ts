@@ -1,7 +1,7 @@
 /**
  * The month's posting calendar, copied from the plan doc "Dan Maza PA - December 2026 Content Plan v1"
  * (07 Social & Video). The Marketing Strategist writes a new plan a month ahead; when it does, replace PLAN below
- * (or point the Content page at a data table once the Strategist saves its calendar there).
+ * or change single posts from chat through the desk_changes table (lib/live.ts), which shows up on the next page load.
  *
  * Status is not stored here: the Content page shows each post's live state from the briefs and the content queue
  * in n8n when it finds a match by date and project.
@@ -92,7 +92,9 @@ export const PLAN: PlannedPost[] = [
  * Videos in Google Drive to preview on the Content page until each queue item carries its own drive_link.
  * Add a row for each draft cut; the page embeds Drive's own player, so only people with access to the file can play it.
  */
-export const DRIVE_VIDEOS: { title: string; project: string; fileId: string; note: string }[] = [
+export interface DriveVideo { title: string; project: string; fileId: string; note: string }
+
+export const DRIVE_VIDEOS: DriveVideo[] = [
   { title: "Cipriani Reel v3, draft", project: "Cipriani Residences Miami", fileId: "10uyoQOXA7IXI2PZarAWKrBMvXfP1Lurh", note: "Draft cut for review. Not posted." },
   { title: "Cipriani, Topped Off Reel, draft for approval", project: "Cipriani Residences Miami", fileId: "1VDC7PQDIhnnnWbbR9iCW1K4QOhSTh_th", note: "Draft cut for review. Not posted." },
 ];

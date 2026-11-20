@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Bars from "@/components/Bars";
 import { LivePill, RunPill } from "@/components/Status";
-import { AGENTS } from "@/lib/config";
+import { getAgents, recentChanges } from "@/lib/live";
 import { ago, duration } from "@/lib/format";
 import { agentActivity, nowFor, snapshot, statsByWorkflow, wfName } from "@/lib/view";
 
@@ -10,8 +10,10 @@ function greeting(now: number) {
   return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
 }
 
+const CHANGE_KIND: Record<string, string> = {"role": "Role", "department": "Department", "gate": "Gate", "link": "Hand-off", "content_team": "Content team", "agent": "Agent", "post": "Post", "video": "Video", "plan": "Plan"};
+
 export default async function Overview() {
-  const s = await snapshot();
+  const [s, AGENTS, live] = await Promise.all([snapshot(), getAgents(), recentChanges(5)]);
   const now = nowFor(s);
   const stats = statsByWorkflow(s);
   const day = s.executions.filter((e) => now - new Date(e.startedAt).getTime() < 86400000);
@@ -104,7 +106,7 @@ export default async function Overview() {
             </div>
             <div className="list">
               {AGENTS.map((a) => {
-                const { runs24: runs, last } = agentActivity(a.toolWorkflowIds, stats);
+                const { runs24: runs, last } = agentActivity(AGENTS, a.toolWorkflowIds, stats);
                 return (
                   <div key={a.id} className="li">
                     <span className="orb" style={{ width: 34, height: 34, borderRadius: 11, ["--c1" as string]: a.gradient[0], ["--c2" as string]: a.gradient[1] }} />
@@ -117,6 +119,30 @@ export default async function Overview() {
                 );
               })}
             </div>
+          </div>
+
+          <div className="card glass">
+            <div className="card-head">
+              <h2>Changes from chat</h2>
+              <Link href="/team">Team →</Link>
+            </div>
+            {live.error ? (
+              <div className="empty"><b>Couldn&apos;t read changes</b>{live.error}</div>
+            ) : live.changes.length === 0 ? (
+              <div className="empty"><b>None yet</b>Ask in chat to add an agent, change a role or move a post, and it shows here and on its page right away.</div>
+            ) : (
+              <div className="list">
+                {live.changes.map((c) => (
+                  <div key={c.id} className="li">
+                    <span className={`dot ${c.problem ? "bad" : c.removed ? "warn" : "ok"}`} />
+                    <div className="grow">
+                      <div className="name">{CHANGE_KIND[c.kind] ?? c.kind} {c.removed ? "removed" : "updated"}: {c.key}</div>
+                      <div className="meta">{c.problem ? `Not applied: ${c.problem}` : c.note || "No note"}{c.by ? ` · ${c.by}` : ""} · {ago(c.at, now)}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="card glass">

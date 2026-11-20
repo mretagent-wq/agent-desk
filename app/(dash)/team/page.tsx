@@ -1,25 +1,10 @@
 import Link from "next/link";
 import { IconShield } from "@/components/Icons";
-import { AGENTS, EXTERNAL_INTAKE } from "@/lib/config";
+import { EXTERNAL_INTAKE } from "@/lib/config";
 import { ago, when } from "@/lib/format";
-import {
-  DEPTS,
-  EDGES,
-  GATE_APPROVALS,
-  ROLES,
-  CONTENT_TEAM,
-  STRUCTURE,
-  chainFor,
-  deptColor,
-  gate,
-  label,
-  role,
-  sideEdges,
-  type Edge,
-  type Role,
-  type RoleStatus,
-  type Step,
-} from "@/lib/structure";
+import { getAgents, getChanges, getTeam } from "@/lib/live";
+import { GATE_APPROVALS, deptColor, type Edge, type Role, type RoleStatus, type Step, type Team } from "@/lib/structure";
+import type { AgentDef } from "@/lib/types";
 import type { ExternalEvent, Snapshot } from "@/lib/types";
 import { agentActivity, isShared, n8nLink, nowFor, snapshot, statsByWorkflow } from "@/lib/view";
 
@@ -37,15 +22,15 @@ const SIDE: Record<string, string> = { revision: "↺ Sends back to", data: "⇢
 interface Activity { text: string; tone: string; pulse: boolean }
 type Stats = ReturnType<typeof statsByWorkflow>;
 
-function activityFor(r: Role, s: Snapshot, stats: Stats, now: number): Activity | null {
-  const a = AGENTS.find((x) => x.id === r.n8n_agent_id);
+function activityFor(r: Role, agents: AgentDef[], s: Snapshot, stats: Stats, now: number): Activity | null {
+  const a = agents.find((x) => x.id === r.n8n_agent_id);
   const ids = [...(a?.toolWorkflowIds ?? []), ...(r.n8n_workflow_ids ?? [])];
   if (!ids.length) return null;
-  const own = ids.filter((id) => !isShared(id));
+  const own = ids.filter((id) => !isShared(agents, id));
   if (s.executions.some((e) => own.includes(e.workflowId) && (e.status === "running" || e.status === "new" || e.status === "waiting"))) {
     return { text: "Working now", tone: "info", pulse: true };
   }
-  const { runs24, runs7, fails7, last } = agentActivity(ids, stats);
+  const { runs24, runs7, fails7, last } = agentActivity(agents, ids, stats);
   if (fails7 && last && s.executions.find((e) => e.startedAt === last && own.includes(e.workflowId))?.status === "error") {
     return { text: `Last run failed, ${ago(last, now)}`, tone: "bad", pulse: false };
   }
@@ -70,13 +55,13 @@ function RoleNode({ r, act, compact }: { r: Role; act: Activity | null; compact?
   );
 }
 
-function GateNode({ id, waiting }: { id: string; waiting: number | null }) {
-  const g = gate(id);
+function GateNode({ t, id, waiting }: { t: Team; id: string; waiting: number | null }) {
+  const g = t.gate(id);
   if (!g) return null;
   return (
     <div className="gate-node">
       <div className="gate-name"><IconShield /> {g.name}</div>
-      <div className="gate-who">{g.approvers.map(label).join(" and ")}</div>
+      <div className="gate-who">{g.approvers.map(t.label).join(" and ")}</div>
       <div className="gate-rule">{g.rule}</div>
       {waiting !== null && (
         <Link href="/approvals" className={`gate-count ${waiting ? "on" : ""}`}>{waiting} waiting</Link>
@@ -95,8 +80,8 @@ function Connector({ e }: { e?: Edge }) {
   );
 }
 
-function Sides({ id, drawn }: { id: string; drawn: Set<Edge> }) {
-  const edges = sideEdges(id, drawn);
+function Sides({ t, id, drawn }: { t: Team; id: string; drawn: Set<Edge> }) {
+  const edges = t.sideEdges(id, drawn);
   if (!edges.length) return null;
   // Several feeds to the same role read as one line.
   const grouped = new Map<string, Edge[]>();
@@ -105,7 +90,7 @@ function Sides({ id, drawn }: { id: string; drawn: Set<Edge> }) {
     <ul className="sides">
       {[...grouped.values()].map((es) => (
         <li key={`${es[0].type}:${es[0].to}`} className={es[0].type}>
-          <span>{SIDE[es[0].type] ?? "→"} <b>{label(es[0].to)}</b></span>
+          <span>{SIDE[es[0].type] ?? "→"} <b>{t.label(es[0].to)}</b></span>
           <span className="muted">{es[0].label}</span>
         </li>
       ))}
@@ -122,14 +107,15 @@ function outsideAgents(events: ExternalEvent[]) {
   });
 }
 
-export default async function Team() {
-  const s = await snapshot();
+export default async function TeamPage() {
+  const [s, t, agents, live] = await Promise.all([snapshot(), getTeam(), getAgents(), getChanges()]);
+  const { ROLES, DEPTS, EDGES, CONTENT_TEAM, structure: STRUCTURE, role, chainFor } = t;
   const now = nowFor(s);
   const stats = statsByWorkflow(s);
   const waitingBy = new Map<string, number>();
   for (const a of s.approvals) waitingBy.set(a.sourceId, (waitingBy.get(a.sourceId) ?? 0) + 1);
   const gateWaiting = (id: string) => (GATE_APPROVALS[id] ? waitingBy.get(GATE_APPROVALS[id]) ?? 0 : null);
-  const act = (r: Role) => activityFor(r, s, stats, now);
+  const act = (r: Role) => activityFor(r, agents, s, stats, now);
 
   const command = DEPTS.find((d) => d.id === "command");
   const people = (command?.members ?? ROLES.filter((r) => r.kind === "human").map((r) => r.id)).map(role).filter((r): r is Role => Boolean(r));
@@ -155,6 +141,13 @@ export default async function Team() {
           </p>
         </div>
       </header>
+
+      {live.error && (
+        <div className="banner glass">
+          <span className="dot bad" />
+          <span>{live.error}</span>
+        </div>
+      )}
 
       {CONTENT_TEAM && (
         <div className="banner glass">
@@ -204,13 +197,13 @@ export default async function Team() {
                     return (
                       <div key={`${st.id}-${i}`} className="step">
                         {i > 0 && (st.via ? <Connector e={st.via} /> : <div className="conn loose"><span className="conn-label">Also in this team</span></div>)}
-                        {st.kind === "gate" ? <GateNode id={st.id} waiting={gateWaiting(st.id)} /> : r ? (
+                        {st.kind === "gate" ? <GateNode t={t} id={st.id} waiting={gateWaiting(st.id)} /> : r ? (
                           <>
                             {routed.has(r.id) && i > 0 && <div className="routed">Orchestrator routes here too</div>}
                             <RoleNode r={r} act={act(r)} compact={i > 0} />
                           </>
                         ) : null}
-                        {st.kind === "role" && <Sides id={st.id} drawn={drawn} />}
+                        {st.kind === "role" && <Sides t={t} id={st.id} drawn={drawn} />}
                       </div>
                     );
                   })}
@@ -261,7 +254,7 @@ export default async function Team() {
       </section>
 
       <p className="muted small" style={{ padding: "0 4px" }}>
-        The chart is drawn from the team roster file (<code>data/team-structure.json</code>, copied from <code>agent-team/structure.json</code> on each build). Change the roster and redeploy; no code change needed.
+        The chart is drawn from the team roster (<code>agent-team/structure.json</code>, copied on each build) plus every change made from chat, read live on each page load{live.changes.length ? ` (${live.changes.length} so far)` : ""}. A change from chat shows the next time this page opens; no redeploy.
       </p>
     </>
   );

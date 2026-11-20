@@ -149,3 +149,9 @@ export const CONTENT_SOURCES = {
 
 /** The To-do list. Rows live in the n8n data table desk_todos (title, note, done, done_at, added_by). */
 export const TODOS = { tableId: "iHYq8K0rxweANg0W" };
+
+/**
+ * Changes made from chat. Any session adds a row to the n8n data table desk_changes and the dashboard applies it on
+ * the next page load, with no redeploy. Columns and kinds are described in lib/live.ts and LIVE-CHANGES.md.
+ */
+export const LIVE_CHANGES = { tableId: "0dsAJYFlmQ3E319R" };

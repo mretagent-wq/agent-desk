@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { RunActions } from "@/components/Controls";
 import { RunPill } from "@/components/Status";
-import { AGENTS } from "@/lib/config";
+import { getAgents } from "@/lib/live";
 import { ago, duration, when } from "@/lib/format";
 import { nowFor, snapshot, wfName } from "@/lib/view";
 
@@ -16,7 +16,7 @@ const FILTERS = [
 export default async function Runs({ searchParams }: { searchParams: Promise<{ status?: string; workflow?: string; agent?: string }> }) {
   const q = await searchParams;
   const status = q.status ?? "all";
-  const s = await snapshot();
+  const [s, AGENTS] = await Promise.all([snapshot(), getAgents()]);
   const now = nowFor(s);
   const agent = AGENTS.find((a) => a.id === q.agent);
   const wfFilter = q.workflow ? [q.workflow] : agent ? agent.toolWorkflowIds : null;

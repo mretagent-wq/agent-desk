@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { IconShield } from "@/components/Icons";
 import { LivePill } from "@/components/Status";
-import { AGENTS, AGENTS_SYNCED_AT, EXTERNAL_INTAKE } from "@/lib/config";
+import { AGENTS_SYNCED_AT, EXTERNAL_INTAKE } from "@/lib/config";
+import { getAgents } from "@/lib/live";
 import { ago, when } from "@/lib/format";
 import { agentActivity, isShared, n8nLink, nowFor, snapshot, statsByWorkflow, wfName } from "@/lib/view";
 
 export default async function Agents() {
-  const s = await snapshot();
+  const [s, AGENTS] = await Promise.all([snapshot(), getAgents()]);
   const now = nowFor(s);
   const stats = statsByWorkflow(s);
   const byId = new Map(s.workflows.map((w) => [w.id, w]));
@@ -29,7 +30,7 @@ export default async function Agents() {
       <section className="grid three">
         {AGENTS.map((a) => {
           const tools = a.toolWorkflowIds.map((id) => ({ id, w: byId.get(id), st: stats.get(id) }));
-          const { runs24, runs7, fails7, last } = agentActivity(a.toolWorkflowIds, stats);
+          const { runs24, runs7, fails7, last } = agentActivity(AGENTS, a.toolWorkflowIds, stats);
           const link = n8nLink(s, "/");
           const subs = (a.subAgents ?? []).map((id) => AGENTS.find((x) => x.id === id)?.name).filter(Boolean);
           return (
@@ -55,7 +56,7 @@ export default async function Agents() {
                     <div key={t.id} className="tool">
                       <span className={`dot ${t.w?.active ? "ok" : ""}`} />
                       <span className="grow">{t.w ? wfName(s, t.id) : `Missing workflow ${t.id}`}</span>
-                      {isShared(t.id) && <span className="pill" style={{ padding: "0 8px", fontSize: 10.5 }}>shared</span>}
+                      {isShared(AGENTS, t.id) && <span className="pill" style={{ padding: "0 8px", fontSize: 10.5 }}>shared</span>}
                       <span className="muted">{t.st?.runs7 ?? 0}</span>
                     </div>
                   ))}

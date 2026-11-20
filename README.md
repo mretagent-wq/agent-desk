@@ -33,8 +33,10 @@ Internal dashboard for MRET 1's n8n agents. Glass UI, Next.js 15, Google sign-in
 `PREVIEW_MODE=1` (local only, ignored on Vercel and Netlify) skips sign-in and runs on a snapshot of the real n8n data from Nov 19, with buttons that change nothing.
 
 ## Where to change things
-- Team structure: `agent-team/structure.json` (next to this project). `npm run dev` and `npm run build` copy it to `data/team-structure.json` (`scripts/sync-team.mjs`); if it isn't there, the last copy is used. Department colours, which gate feeds which Approvals table, and the content pipeline stages: `lib/structure.ts`
-- December content calendar and Drive draft cuts: `lib/content-plan.ts`. Briefs, queue and performance are read live from the content agent's data tables (`CONTENT_SOURCES` in `lib/config.ts`)
+
+- From chat, live: add a row to the n8n table `desk_changes` (`LIVE_CHANGES` in `lib/config.ts`). Roles, departments, gates, hand-offs, agents, calendar posts, Drive cuts and plan notes change on the next page load, with no redeploy. Format and examples: `LIVE-CHANGES.md`. Merging happens in `lib/live.ts`. The Overview lists the latest changes and any that couldn't be applied.
+- Team structure baseline: `agent-team/structure.json` (next to this project). `npm run dev` and `npm run build` copy it to `data/team-structure.json` (`scripts/sync-team.mjs`); if it isn't there, the last copy is used. Department colours, which gate feeds which Approvals table, and the content pipeline stages: `lib/structure.ts`
+- December content calendar and Drive draft cuts baseline: `lib/content-plan.ts`. Briefs, queue and performance are read live from the content agent's data tables (`CONTENT_SOURCES` in `lib/config.ts`)
 - Agents, their tools and approval tables: `lib/config.ts`
 - n8n calls: `lib/n8n.ts`
 - Look and feel: `app/globals.css`

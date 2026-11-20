@@ -3,8 +3,8 @@
  *
  * The roles, departments, approval gates and hand-offs come from data/team-structure.json, a copy of
  * agent-team/structure.json from the agent team work. `npm run build` and `npm run dev` refresh the copy
- * when that file sits next to this project (scripts/sync-team.mjs), so a new roster shows up on the next deploy
- * with no code change.
+ * when that file sits next to this project (scripts/sync-team.mjs). That copy is the baseline. Changes made from chat
+ * are rows in the n8n table desk_changes, applied on every page load by lib/live.ts, so they show with no redeploy.
  *
  * What lives here instead: department colours, which approval gate feeds which Approvals table, and which
  * roles make up the content pipeline. All are keyed by id, so a role that is renamed keeps working; a role that
@@ -38,7 +38,7 @@ export interface Edge { from: string; to: string; type: EdgeType; label: string 
 
 export interface ContentTeam { version: string; updated: string; status: string; doc: string; schedule: { when: string; step: string }[] }
 
-interface Structure {
+export interface Structure {
   content_team?: ContentTeam;
   version: string;
   updated: string;
@@ -50,11 +50,8 @@ interface Structure {
   edges: Edge[];
 }
 
-export const STRUCTURE = raw as unknown as Structure;
-export const ROLES = STRUCTURE.nodes;
-export const DEPTS = STRUCTURE.departments;
-export const GATES = STRUCTURE.approval_gates ?? [];
-export const EDGES = STRUCTURE.edges ?? [];
+/** The roster as it ships with the code. Changes made from chat are layered on top of it per request (lib/live.ts). */
+export const BASE_STRUCTURE = raw as unknown as Structure;
 
 /** Department colours. Unknown departments get one from the fallback list. */
 const DEPT_COLOR: Record<string, string> = {
@@ -94,65 +91,68 @@ const STAGE: Record<string, string> = {
   performance: "Learns",
 };
 
-/** The content pipeline: the Marketing and content department's chain, in order. Follows the roster file. */
-export function contentPipeline(): { stage: string; id: string }[] {
-  const d = DEPTS.find((x) => x.id === "marketing");
-  if (!d) return [];
-  return chainFor(d).map((st) => ({
-    id: st.id,
-    stage: STAGE[st.id] ?? (st.kind === "gate" ? "Approves" : role(st.id)?.kind === "reviewer" ? "Checks" : role(st.id)?.kind === "head" ? "Plans" : "Does"),
-  }));
-}
-
-export const CONTENT_TEAM = STRUCTURE.content_team;
-
-export function role(id: string | undefined | null): Role | undefined {
-  return ROLES.find((r) => r.id === id);
-}
-export function gate(id: string | undefined | null): Gate | undefined {
-  return GATES.find((g) => g.id === id);
-}
-export function label(id: string): string {
-  return role(id)?.name ?? gate(id)?.name ?? id;
-}
-export function deptOf(id: string): Dept | undefined {
-  const r = role(id);
-  return r ? DEPTS.find((d) => d.id === r.department) : undefined;
-}
-
 export type Step =
   | { kind: "role"; id: string; via?: Edge }
   | { kind: "gate"; id: string; via?: Edge };
 
-/**
- * The order work moves through one department: start at the head and follow hand-offs, approvals and
- * in-department data feeds. Roles in the department that the chain never reaches are added at the end.
- */
-export function chainFor(d: Dept): Step[] {
-  const inDept = new Set([d.head, ...d.members]);
-  const steps: Step[] = [];
-  const seen = new Set<string>();
-  const push = (id: string, via?: Edge) => {
-    seen.add(id);
-    steps.push(gate(id) ? { kind: "gate", id, via } : { kind: "role", id, via });
-  };
-  if (role(d.head)) push(d.head);
-  for (let i = 0; i < steps.length; i++) {
-    const from = steps[i].id;
-    const next = EDGES.filter(
-      (e) =>
-        e.from === from &&
-        !seen.has(e.to) &&
-        (e.type === "hands_off" || e.type === "approval" || (e.type === "data" && inDept.has(e.to))) &&
-        (gate(e.to) || inDept.has(e.to)),
-    );
-    for (const e of next) if (!seen.has(e.to)) push(e.to, e);
-  }
-  for (const id of d.members) if (!seen.has(id) && role(id)) push(id);
-  return steps;
-}
+export type Team = ReturnType<typeof makeTeam>;
 
-/** Edges leaving a step that the chain doesn't draw: revisions, cross-team feeds, reports to someone other than the Orchestrator. */
-export function sideEdges(id: string, drawn: Set<Edge>): Edge[] {
-  return EDGES.filter((e) => e.from === id && !drawn.has(e) && !(e.type === "reports" && role(e.to)?.kind === "orchestrator") && e.type !== "delegates");
+/** Everything the Team and Content pages read about the roster, built from one Structure. */
+export function makeTeam(st: Structure) {
+  const ROLES = st.nodes ?? [];
+  const DEPTS = st.departments ?? [];
+  const GATES = st.approval_gates ?? [];
+  const EDGES = st.edges ?? [];
+
+  const role = (id: string | undefined | null): Role | undefined => ROLES.find((r) => r.id === id);
+  const gate = (id: string | undefined | null): Gate | undefined => GATES.find((g) => g.id === id);
+  const label = (id: string): string => role(id)?.name ?? gate(id)?.name ?? id;
+  const deptOf = (id: string): Dept | undefined => {
+    const r = role(id);
+    return r ? DEPTS.find((d) => d.id === r.department) : undefined;
+  };
+
+  /**
+   * The order work moves through one department: start at the head and follow hand-offs, approvals and
+   * in-department data feeds. Roles in the department that the chain never reaches are added at the end.
+   */
+  const chainFor = (d: Dept): Step[] => {
+    const inDept = new Set([d.head, ...d.members]);
+    const steps: Step[] = [];
+    const seen = new Set<string>();
+    const push = (id: string, via?: Edge) => {
+      seen.add(id);
+      steps.push(gate(id) ? { kind: "gate", id, via } : { kind: "role", id, via });
+    };
+    if (role(d.head)) push(d.head);
+    for (let i = 0; i < steps.length; i++) {
+      const from = steps[i].id;
+      const next = EDGES.filter(
+        (e) =>
+          e.from === from &&
+          !seen.has(e.to) &&
+          (e.type === "hands_off" || e.type === "approval" || (e.type === "data" && inDept.has(e.to))) &&
+          (gate(e.to) || inDept.has(e.to)),
+      );
+      for (const e of next) if (!seen.has(e.to)) push(e.to, e);
+    }
+    for (const id of d.members) if (!seen.has(id) && role(id)) push(id);
+    return steps;
+  };
+
+  /** Edges leaving a step that the chain doesn't draw: revisions, cross-team feeds, reports to someone other than the Orchestrator. */
+  const sideEdges = (id: string, drawn: Set<Edge>): Edge[] =>
+    EDGES.filter((e) => e.from === id && !drawn.has(e) && !(e.type === "reports" && role(e.to)?.kind === "orchestrator") && e.type !== "delegates");
+
+  /** The content pipeline: the Marketing and content department's chain, in order. Follows the roster. */
+  const contentPipeline = (): { stage: string; id: string }[] => {
+    const d = DEPTS.find((x) => x.id === "marketing");
+    if (!d) return [];
+    return chainFor(d).map((s) => ({
+      id: s.id,
+      stage: STAGE[s.id] ?? (s.kind === "gate" ? "Approves" : role(s.id)?.kind === "reviewer" ? "Checks" : role(s.id)?.kind === "head" ? "Plans" : "Does"),
+    }));
+  };
+
+  return { structure: st, ROLES, DEPTS, GATES, EDGES, CONTENT_TEAM: st.content_team, role, gate, label, deptOf, chainFor, sideEdges, contentPipeline };
 }

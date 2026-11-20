@@ -2,8 +2,9 @@ import Link from "next/link";
 import { IconShield } from "@/components/Icons";
 import { when } from "@/lib/format";
 import type { Row } from "@/lib/n8n";
-import { DRIVE_VIDEOS, PLAN, PLAN_META, drivePreview, type PlannedPost } from "@/lib/content-plan";
-import { contentPipeline, deptColor, gate, label, role, type RoleStatus } from "@/lib/structure";
+import { drivePreview, type PlannedPost } from "@/lib/content-plan";
+import { getPlan, getTeam } from "@/lib/live";
+import { deptColor, type RoleStatus } from "@/lib/structure";
 import { content, snapshot } from "@/lib/view";
 
 const str = (v: unknown) => (v === null || v === undefined ? "" : String(v));
@@ -67,7 +68,10 @@ function Video({ src, title }: { src: string; title: string }) {
 }
 
 export default async function Content() {
-  const [c, s] = await Promise.all([content(), snapshot()]);
+  const [c, s, t, { plan: PLAN, meta: PLAN_META, videos }] = await Promise.all([content(), snapshot(), getTeam(), getPlan()]);
+  const { contentPipeline, gate, label, role } = t;
+  const pipeline = contentPipeline();
+  const DRIVE_VIDEOS = videos.filter((v) => drivePreview(v.fileId));
 
   const weekOf = c.briefs.map((b) => str(b.week_of)).filter(Boolean).sort().pop() ?? "";
   const briefs = c.briefs
@@ -117,10 +121,10 @@ export default async function Content() {
       <section className="glass card">
         <div className="card-head">
           <h2>Who does what</h2>
-          <span className="muted small">From the team roster. Change it there and this updates.</span>
+          <span className="muted small">From the team roster, including changes made from chat.</span>
         </div>
-        <ol className="pipeline" style={{ ["--n" as string]: contentPipeline().length }}>
-          {contentPipeline().map((st) => {
+        <ol className="pipeline" style={{ ["--n" as string]: pipeline.length }}>
+          {pipeline.map((st) => {
             const r = role(st.id);
             const g = gate(st.id);
             const [tone, text] = r ? ROLE_STATUS[r.status] : g ? ["gold", "Your yes"] : ["", "Not on the roster"];
@@ -308,7 +312,7 @@ export default async function Content() {
           ))}
         </div>
         <p className="muted small" style={{ padding: "12px 4px 0" }}>
-          Calendar from {PLAN_META.title}, written {when(`${PLAN_META.written}T12:00:00Z`)}. To change it, edit <code>lib/content-plan.ts</code> and redeploy.
+          Calendar from {PLAN_META.title}, written {when(`${PLAN_META.written}T12:00:00Z`)}, plus any changes made from chat. A change shows the next time this page opens; no redeploy.
         </p>
       </section>
     </>

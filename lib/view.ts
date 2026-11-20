@@ -1,8 +1,7 @@
 import "server-only";
 import { cache } from "react";
-import { AGENTS } from "./config";
 import { getContent, getSnapshot } from "./data";
-import type { Execution, Snapshot, Workflow } from "./types";
+import type { AgentDef, Execution, Snapshot, Workflow } from "./types";
 
 export const snapshot = cache(getSnapshot);
 export const content = cache(getContent);
@@ -31,8 +30,8 @@ export function statsByWorkflow(s: Snapshot): Map<string, WfStats> {
   return m;
 }
 
-export function agentsUsing(workflowId: string): string[] {
-  return AGENTS.filter((a) => a.published && a.toolWorkflowIds.includes(workflowId)).map((a) => a.name);
+export function agentsUsing(agents: AgentDef[], workflowId: string): string[] {
+  return agents.filter((a) => a.published && a.toolWorkflowIds.includes(workflowId)).map((a) => a.name);
 }
 
 export function wfName(s: Snapshot, id: string): string {
@@ -44,12 +43,12 @@ export function n8nLink(s: Snapshot, path: string): string | null {
 }
 
 /** A tool shared by several agents can't be credited to one of them, so counts use each agent's own tools only. */
-export function isShared(workflowId: string): boolean {
-  return AGENTS.filter((a) => a.toolWorkflowIds.includes(workflowId)).length > 1;
+export function isShared(agents: AgentDef[], workflowId: string): boolean {
+  return agents.filter((a) => a.toolWorkflowIds.includes(workflowId)).length > 1;
 }
 
-export function agentActivity(toolIds: string[], stats: Map<string, WfStats>) {
-  const own = toolIds.filter((id) => !isShared(id));
+export function agentActivity(agents: AgentDef[], toolIds: string[], stats: Map<string, WfStats>) {
+  const own = toolIds.filter((id) => !isShared(agents, id));
   const sum = (k: keyof Omit<WfStats, "last">) => own.reduce((n, id) => n + (stats.get(id)?.[k] ?? 0), 0);
   const last = own.map((id) => stats.get(id)?.last?.startedAt).filter((x): x is string => Boolean(x)).sort().pop() ?? null;
   return { runs24: sum("runs24"), runs7: sum("runs7"), fails7: sum("fails7"), last };

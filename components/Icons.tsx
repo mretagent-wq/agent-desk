@@ -1,0 +1,10 @@
+const p = { fill: "none", stroke: "currentColor", strokeWidth: 1.6, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+export const IconHome = () => (<svg viewBox="0 0 24 24" {...p}><path d="M3 11.5 12 4l9 7.5" /><path d="M5.5 10v9.5h13V10" /></svg>);
+export const IconAgents = () => (<svg viewBox="0 0 24 24" {...p}><circle cx="12" cy="8" r="3.5" /><path d="M4.5 20c.8-3.6 3.8-5.5 7.5-5.5s6.7 1.9 7.5 5.5" /></svg>);
+export const IconTeam = () => (<svg viewBox="0 0 24 24" {...p}><rect x="9" y="3" width="6" height="5" rx="1.5" /><rect x="3" y="16" width="6" height="5" rx="1.5" /><rect x="15" y="16" width="6" height="5" rx="1.5" /><path d="M12 8v4M6 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2" /></svg>);
+export const IconContent = () => (<svg viewBox="0 0 24 24" {...p}><rect x="6" y="3" width="12" height="18" rx="2.5" /><path d="m10.5 9.5 4 2.5-4 2.5z" /></svg>);
+export const IconTodo = () => (<svg viewBox="0 0 24 24" {...p}><rect x="3" y="7" width="10" height="10" rx="5" /><path d="M16 9h5M16 15h5" /></svg>);
+export const IconFlows = () => (<svg viewBox="0 0 24 24" {...p}><rect x="3" y="4" width="7" height="6" rx="2" /><rect x="14" y="14" width="7" height="6" rx="2" /><path d="M10 7h3a3 3 0 0 1 3 3v4" /></svg>);
+export const IconRuns = () => (<svg viewBox="0 0 24 24" {...p}><path d="M3 12h4l3-7 4 14 3-7h4" /></svg>);
+export const IconInbox = () => (<svg viewBox="0 0 24 24" {...p}><path d="M4 13.5 6.5 5h11l2.5 8.5V19H4z" /><path d="M4 13.5h5a3 3 0 0 0 6 0h5" /></svg>);
+export const IconShield = () => (<svg viewBox="0 0 24 24" {...p} width="14" height="14"><path d="M12 3 5 6v5.5c0 4.3 3 7.6 7 9.5 4-1.9 7-5.2 7-9.5V6z" /></svg>);

@@ -1,0 +1,794 @@
+{
+ "version": "v1 with v2-lean-content",
+ "updated": "2026-11-19",
+ "title": "Dan Maza PA agent team structure",
+ "legend": {
+  "kind": [
+   "human",
+   "orchestrator",
+   "head",
+   "worker",
+   "reviewer"
+  ],
+  "status": [
+   "live",
+   "draft",
+   "planned",
+   "external",
+   "active"
+  ],
+  "edge_type": {
+   "request": "person asks",
+   "delegates": "orchestrator hands work down",
+   "reports": "result goes back up",
+   "hands_off": "next step in a department",
+   "revision": "sent back with notes",
+   "approval": "human gate passes it on",
+   "data": "data feed"
+  },
+  "sourcing": {
+   "in_house": "built or live in n8n",
+   "good_match": "GitHub repo covers it with standard n8n steps",
+   "partial": "a repo covers part, rest custom",
+   "custom": "no repo fits",
+   "external": "lives outside n8n"
+  }
+ },
+ "nodes": [
+  {
+   "id": "nicholas",
+   "name": "Nicholas",
+   "department": "command",
+   "kind": "human",
+   "status": "active",
+   "priority": 0,
+   "job": "Head of Ops and AI. Talks to the Orchestrator, approves posts, site changes, hires and fixes",
+   "why_it_matters": "Final say on anything outward",
+   "sourcing": "n/a",
+   "sourcing_note": "",
+   "outward_actions": true,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "dan",
+   "name": "Dan",
+   "department": "command",
+   "kind": "human",
+   "status": "active",
+   "priority": 0,
+   "job": "The boss and realtor. Co-approves every post and client message",
+   "why_it_matters": "Brand, clients and Fortune compliance sit with him",
+   "sourcing": "n/a",
+   "sourcing_note": "",
+   "outward_actions": true,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "sehab",
+   "name": "Sehab",
+   "department": "growth",
+   "kind": "human",
+   "status": "active",
+   "priority": 0,
+   "job": "Runs Meta ads; applies ad changes the Ads Analyst recommends",
+   "why_it_matters": "Only person who changes the ad account",
+   "sourcing": "n/a",
+   "sourcing_note": "",
+   "outward_actions": true,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "orchestrator",
+   "name": "Orchestrator (chief of staff)",
+   "department": "command",
+   "kind": "orchestrator",
+   "status": "planned",
+   "priority": 1,
+   "job": "The one agent you talk to. Routes each request to the right department head, tracks status, returns results, holds everything outward for approval",
+   "why_it_matters": "Without it you manage every agent by hand",
+   "sourcing": "custom",
+   "sourcing_note": "No safe repo fits; pranjalll-k supervisor template (Safe 23) usable only as a skeleton",
+   "outward_actions": false,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "hiring_manager",
+   "name": "Hiring Manager",
+   "department": "people",
+   "kind": "head",
+   "status": "live",
+   "priority": 1,
+   "job": "Finds agents on GitHub for a role, safety-scans them, recommends hires, keeps the roster. Runs the Talent Scout check monthly",
+   "why_it_matters": "Gate for anything new joining the team",
+   "sourcing": "in-house",
+   "sourcing_note": "Live in n8n",
+   "outward_actions": false,
+   "n8n_agent_id": "SBV7uj3qQmeix4TS"
+  },
+  {
+   "id": "talent_scout",
+   "name": "Talent Scout (monthly)",
+   "department": "people",
+   "kind": "worker",
+   "status": "planned",
+   "priority": 3,
+   "job": "Monthly scheduled run of the Hiring Manager: looks for better repos for each role and suggests new hires",
+   "why_it_matters": "Keeps the team current without you asking",
+   "sourcing": "in-house",
+   "sourcing_note": "A scheduled task on the Hiring Manager, not a separate agent",
+   "outward_actions": false,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "overseer",
+   "name": "Quality Overseer",
+   "department": "people",
+   "kind": "reviewer",
+   "status": "planned",
+   "priority": 3,
+   "job": "Weekly: scores every agent's recent work against rubrics, finds repeat mistakes, proposes instruction changes for the Friday review",
+   "why_it_matters": "How the team gets better week to week",
+   "sourcing": "partial",
+   "sourcing_note": "paper-instruments/rubric (Safe 0, MIT) as the scorer; weekly loop is custom",
+   "outward_actions": false,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "strategist",
+   "name": "Marketing Strategist",
+   "department": "marketing",
+   "kind": "head",
+   "status": "draft",
+   "priority": 1,
+   "job": "Monthly plan on the 1st, weekly briefs Mondays, intent per post; reads results",
+   "why_it_matters": "Every post has a reason and a metric",
+   "sourcing": "in-house",
+   "sourcing_note": "Built from 3 MIT repos plus Dan's strategy; draft awaiting publish",
+   "outward_actions": false,
+   "n8n_agent_id": "x1UKbOROpIYc2gIz"
+  },
+  {
+   "id": "content",
+   "name": "Content Creator",
+   "department": "marketing",
+   "kind": "worker",
+   "status": "live",
+   "priority": 1,
+   "job": "Cut from footage, burn subtitles, export 9:16, Drive preview",
+   "why_it_matters": "The maker",
+   "sourcing": "in-house",
+   "sourcing_note": "Live; Luxury editing update is a draft awaiting publish",
+   "outward_actions": false,
+   "n8n_agent_id": "10dJtM9xXNJyF7Xy"
+  },
+  {
+   "id": "editor",
+   "name": "Editor",
+   "department": "marketing",
+   "kind": "reviewer",
+   "status": "hiring",
+   "priority": 1,
+   "job": "Checks cut and copy vs Brand Kit v2 and sources; 2 revision rounds then flags Nicholas",
+   "why_it_matters": "A separate checker, so the maker never grades its own work",
+   "sourcing": "partial",
+   "sourcing_note": "jordanrendric/claude-video-vision (Safe 5, MIT) lets it see frames; scoring loop is custom",
+   "outward_actions": false,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "ads_analyst",
+   "name": "Ads Analyst",
+   "department": "growth",
+   "kind": "worker",
+   "status": "planned",
+   "priority": 2,
+   "job": "Reads Meta ad results, explains what works and what burns money, recommends changes, drafts ad copy; never edits the ad account",
+   "why_it_matters": "Lower cost per lead, fair-housing safe",
+   "sourcing": "partial",
+   "sourcing_note": "mathiaschu/meta-ads-analyzer (Safe 5, MIT, stale) plus custom fair-housing guardrail and copy",
+   "outward_actions": false,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "lead_vetting",
+   "name": "Lead Research and Vetting",
+   "department": "sales",
+   "kind": "head",
+   "status": "planned",
+   "priority": 1,
+   "job": "Finds the real person behind each new Follow Up Boss lead, judges money, fit and seriousness, fills CRM fields, flags missing info",
+   "why_it_matters": "Dan spends time only on real buyers",
+   "sourcing": "partial",
+   "sourcing_note": "brian-conrya/n8n-nodes-followupboss (Safe 15, MIT) as connector; research and judgment are custom (extends the existing vetting workflow)",
+   "outward_actions": false,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "nurturing",
+   "name": "Lead Nurturing",
+   "department": "sales",
+   "kind": "worker",
+   "status": "planned",
+   "priority": 2,
+   "job": "Drafts personal texts and emails per lead, logs touchpoints to one profile, moves leads toward a buyer-broker agreement",
+   "why_it_matters": "Follow-up that never slips",
+   "sourcing": "custom",
+   "sourcing_note": "No repo fits; build around the Follow Up Boss node",
+   "outward_actions": true,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "phone_james",
+   "name": "Phone agent James",
+   "department": "sales",
+   "kind": "worker",
+   "status": "external",
+   "priority": 2,
+   "job": "Answers and makes calls in GoHighLevel, collects lead details, logs calls",
+   "why_it_matters": "Already live; next step is the knowledge base from Dan",
+   "sourcing": "external",
+   "sourcing_note": "Lives in GoHighLevel; QuickVoice (Safe 12, MIT) noted only as an open-source alternative",
+   "outward_actions": true,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "seo",
+   "name": "SEO and Website Agent",
+   "department": "web",
+   "kind": "head",
+   "status": "draft",
+   "priority": 2,
+   "job": "Watches Dan's project sites: SEO, AEO and GEO, speed, broken pages, backlinks; ranks fixes. Never changes a site",
+   "why_it_matters": "Sites rank and stay accurate",
+   "sourcing": "in-house",
+   "sourcing_note": "Draft in n8n",
+   "outward_actions": false,
+   "n8n_agent_id": "DQTeX0zXZXN382n9"
+  },
+  {
+   "id": "integration_monitor",
+   "name": "Integration Monitor",
+   "department": "ops",
+   "kind": "worker",
+   "status": "planned",
+   "priority": 2,
+   "job": "Watches n8n failures, expired credentials, webhooks between Follow Up Boss, GoHighLevel, Twilio, Mailchimp and Zapier, and broken links; alerts with likely cause",
+   "why_it_matters": "Catches breaks before a lead is lost",
+   "sourcing": "partial",
+   "sourcing_note": "kodyk448/n8n-error-alerts (Caution 30) plus lycheeverse/lychee (Safe 9, Apache) ; cross-tool checks custom",
+   "outward_actions": false,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "it_fixer",
+   "name": "IT Troubleshooter",
+   "department": "ops",
+   "kind": "reviewer",
+   "status": "planned",
+   "priority": 2,
+   "job": "Takes issues from the monitor's queue, reads n8n executions, diagnoses and drafts a fix for Nicholas to apply",
+   "why_it_matters": "Faster fixes, nothing changed without you",
+   "sourcing": "good_match",
+   "sourcing_note": "czlonkowski/n8n-mcp (Safe 14, MIT, 23k stars) with a read-only key and an n8n queue",
+   "outward_actions": false,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "finance",
+   "name": "Finance Reporting",
+   "department": "back_office",
+   "kind": "worker",
+   "status": "planned",
+   "priority": 3,
+   "job": "Weekly read-only report: subscriptions and AI spend, cost per lead, pipeline value, expected commissions, what to cut",
+   "why_it_matters": "Cuts subscription cost, a stated goal",
+   "sourcing": "custom",
+   "sourcing_note": "No repo fits; ozohaustinn Sheets workflow (Caution 30, no license) is only a pattern",
+   "outward_actions": false,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "tc",
+   "name": "Transaction Coordinator",
+   "department": "back_office",
+   "kind": "worker",
+   "status": "planned",
+   "priority": 3,
+   "job": "After a signing, tracks deposits, inspections, financing and closing dates, drafts reminders for approval, keeps the CRM deal current",
+   "why_it_matters": "Back office last, per the plan",
+   "sourcing": "custom",
+   "sourcing_note": "No repo fits; ClickUp deadlines workflow (Caution 40, no license) is only a pattern",
+   "outward_actions": false,
+   "n8n_agent_id": null
+  },
+  {
+   "id": "platform_strategist",
+   "name": "Platform Strategist",
+   "kind": "worker",
+   "status": "hiring",
+   "job": "Per-platform spec: format, length, hook style, cover, slot, keywords; monthly playbook refresh",
+   "department": "marketing",
+   "n8n_agent_id": null
+  },
+  {
+   "id": "copywriter",
+   "name": "Copywriter",
+   "kind": "worker",
+   "status": "hiring",
+   "job": "Hook, on-screen text, captions per platform, CTA, claim list",
+   "department": "marketing",
+   "n8n_agent_id": null
+  },
+  {
+   "id": "sound",
+   "name": "Sound Designer",
+   "kind": "worker",
+   "status": "hiring",
+   "job": "IG library audio via Meta Audio API for Reels; vetted free music elsewhere; free voiceover",
+   "department": "marketing",
+   "n8n_agent_id": null
+  },
+  {
+   "id": "poster",
+   "name": "Poster",
+   "kind": "worker",
+   "status": "hiring",
+   "job": "Publishes approved posts at slot via Meta API; logs post ID; pulls 24h and 7d results",
+   "department": "marketing",
+   "n8n_agent_id": null
+  }
+ ],
+ "departments": [
+  {
+   "id": "command",
+   "name": "Command",
+   "head": "orchestrator",
+   "members": [
+    "nicholas",
+    "dan"
+   ]
+  },
+  {
+   "id": "marketing",
+   "name": "Marketing and content",
+   "head": "strategist",
+   "members": [
+    "platform_strategist",
+    "copywriter",
+    "content",
+    "sound",
+    "editor",
+    "poster"
+   ]
+  },
+  {
+   "id": "growth",
+   "name": "Paid growth",
+   "head": "ads_analyst",
+   "members": [
+    "sehab"
+   ]
+  },
+  {
+   "id": "sales",
+   "name": "Leads and sales",
+   "head": "lead_vetting",
+   "members": [
+    "nurturing",
+    "phone_james"
+   ]
+  },
+  {
+   "id": "web",
+   "name": "Websites and SEO",
+   "head": "seo",
+   "members": []
+  },
+  {
+   "id": "ops",
+   "name": "Ops and IT",
+   "head": "nicholas",
+   "members": [
+    "integration_monitor",
+    "it_fixer"
+   ]
+  },
+  {
+   "id": "people",
+   "name": "People and quality",
+   "head": "hiring_manager",
+   "members": [
+    "talent_scout",
+    "overseer"
+   ]
+  },
+  {
+   "id": "back_office",
+   "name": "Back office (later)",
+   "head": "finance",
+   "members": [
+    "tc"
+   ]
+  }
+ ],
+ "approval_gates": [
+  {
+   "id": "gate_post",
+   "name": "Post approval",
+   "approvers": [
+    "nicholas",
+    "dan"
+   ],
+   "rule": "Every post before it is scheduled"
+  },
+  {
+   "id": "gate_ads",
+   "name": "Ad change approval",
+   "approvers": [
+    "nicholas"
+   ],
+   "rule": "Sehab applies only approved changes"
+  },
+  {
+   "id": "gate_msg",
+   "name": "Client message approval",
+   "approvers": [
+    "dan"
+   ],
+   "rule": "Every text, email or reminder to a lead or client"
+  },
+  {
+   "id": "gate_site",
+   "name": "Site change approval",
+   "approvers": [
+    "nicholas"
+   ],
+   "rule": "No site change without approval"
+  },
+  {
+   "id": "gate_fix",
+   "name": "Fix approval",
+   "approvers": [
+    "nicholas"
+   ],
+   "rule": "Nicholas applies fixes; agents never change credentials or live workflows"
+  },
+  {
+   "id": "gate_hire",
+   "name": "Hire approval",
+   "approvers": [
+    "nicholas"
+   ],
+   "rule": "Recorded only when Nicholas picks the repo"
+  },
+  {
+   "id": "gate_review",
+   "name": "Friday review",
+   "approvers": [
+    "nicholas",
+    "dan"
+   ],
+   "rule": "Instruction changes applied on Fridays after joint review"
+  }
+ ],
+ "edges": [
+  {
+   "from": "nicholas",
+   "to": "orchestrator",
+   "type": "request",
+   "label": "Asks for work"
+  },
+  {
+   "from": "orchestrator",
+   "to": "strategist",
+   "type": "delegates",
+   "label": "Routes the request"
+  },
+  {
+   "from": "strategist",
+   "to": "orchestrator",
+   "type": "reports",
+   "label": "Result and status"
+  },
+  {
+   "from": "orchestrator",
+   "to": "lead_vetting",
+   "type": "delegates",
+   "label": "Routes the request"
+  },
+  {
+   "from": "lead_vetting",
+   "to": "orchestrator",
+   "type": "reports",
+   "label": "Result and status"
+  },
+  {
+   "from": "orchestrator",
+   "to": "seo",
+   "type": "delegates",
+   "label": "Routes the request"
+  },
+  {
+   "from": "seo",
+   "to": "orchestrator",
+   "type": "reports",
+   "label": "Result and status"
+  },
+  {
+   "from": "orchestrator",
+   "to": "hiring_manager",
+   "type": "delegates",
+   "label": "Routes the request"
+  },
+  {
+   "from": "hiring_manager",
+   "to": "orchestrator",
+   "type": "reports",
+   "label": "Result and status"
+  },
+  {
+   "from": "orchestrator",
+   "to": "ads_analyst",
+   "type": "delegates",
+   "label": "Routes the request"
+  },
+  {
+   "from": "ads_analyst",
+   "to": "orchestrator",
+   "type": "reports",
+   "label": "Result and status"
+  },
+  {
+   "from": "orchestrator",
+   "to": "integration_monitor",
+   "type": "delegates",
+   "label": "Routes the request"
+  },
+  {
+   "from": "integration_monitor",
+   "to": "orchestrator",
+   "type": "reports",
+   "label": "Result and status"
+  },
+  {
+   "from": "orchestrator",
+   "to": "finance",
+   "type": "delegates",
+   "label": "Routes the request"
+  },
+  {
+   "from": "finance",
+   "to": "orchestrator",
+   "type": "reports",
+   "label": "Result and status"
+  },
+  {
+   "from": "orchestrator",
+   "to": "nicholas",
+   "type": "reports",
+   "label": "Plain-words result; asks for approvals"
+  },
+  {
+   "from": "ads_analyst",
+   "to": "gate_ads",
+   "type": "hands_off",
+   "label": "Recommendations and ad copy"
+  },
+  {
+   "from": "gate_ads",
+   "to": "sehab",
+   "type": "approval",
+   "label": "Approved changes applied by Sehab"
+  },
+  {
+   "from": "lead_vetting",
+   "to": "nurturing",
+   "type": "hands_off",
+   "label": "Vetted lead with research and score"
+  },
+  {
+   "from": "phone_james",
+   "to": "lead_vetting",
+   "type": "data",
+   "label": "Call details and transcript"
+  },
+  {
+   "from": "nurturing",
+   "to": "gate_msg",
+   "type": "hands_off",
+   "label": "Drafted text or email"
+  },
+  {
+   "from": "gate_msg",
+   "to": "nurturing",
+   "type": "revision",
+   "label": "Edits"
+  },
+  {
+   "from": "seo",
+   "to": "gate_site",
+   "type": "hands_off",
+   "label": "Ranked fix list"
+  },
+  {
+   "from": "integration_monitor",
+   "to": "it_fixer",
+   "type": "hands_off",
+   "label": "Alert into the issue queue"
+  },
+  {
+   "from": "it_fixer",
+   "to": "gate_fix",
+   "type": "hands_off",
+   "label": "Diagnosis and drafted fix"
+  },
+  {
+   "from": "hiring_manager",
+   "to": "gate_hire",
+   "type": "hands_off",
+   "label": "Shortlist with safety scans"
+  },
+  {
+   "from": "talent_scout",
+   "to": "hiring_manager",
+   "type": "reports",
+   "label": "Monthly better-repo suggestions"
+  },
+  {
+   "from": "overseer",
+   "to": "gate_review",
+   "type": "hands_off",
+   "label": "Scores and proposed instruction changes"
+  },
+  {
+   "from": "strategist",
+   "to": "overseer",
+   "type": "data",
+   "label": "Outputs for weekly scoring"
+  },
+  {
+   "from": "content",
+   "to": "overseer",
+   "type": "data",
+   "label": "Outputs for weekly scoring"
+  },
+  {
+   "from": "editor",
+   "to": "overseer",
+   "type": "data",
+   "label": "Outputs for weekly scoring"
+  },
+  {
+   "from": "seo",
+   "to": "overseer",
+   "type": "data",
+   "label": "Outputs for weekly scoring"
+  },
+  {
+   "from": "lead_vetting",
+   "to": "overseer",
+   "type": "data",
+   "label": "Outputs for weekly scoring"
+  },
+  {
+   "from": "nurturing",
+   "to": "overseer",
+   "type": "data",
+   "label": "Outputs for weekly scoring"
+  },
+  {
+   "from": "it_fixer",
+   "to": "overseer",
+   "type": "data",
+   "label": "Outputs for weekly scoring"
+  },
+  {
+   "from": "finance",
+   "to": "nicholas",
+   "type": "reports",
+   "label": "Weekly read-only report"
+  },
+  {
+   "from": "tc",
+   "to": "gate_msg",
+   "type": "hands_off",
+   "label": "Drafted deal reminders"
+  },
+  {
+   "from": "strategist",
+   "to": "platform_strategist",
+   "type": "hands_off",
+   "label": "Brief with intent and slot"
+  },
+  {
+   "from": "platform_strategist",
+   "to": "copywriter",
+   "type": "hands_off",
+   "label": "Platform spec"
+  },
+  {
+   "from": "copywriter",
+   "to": "content",
+   "type": "hands_off",
+   "label": "Hook, on-screen text, captions"
+  },
+  {
+   "from": "content",
+   "to": "sound",
+   "type": "hands_off",
+   "label": "Cut with subtitles"
+  },
+  {
+   "from": "sound",
+   "to": "editor",
+   "type": "hands_off",
+   "label": "Cut with audio"
+  },
+  {
+   "from": "editor",
+   "to": "content",
+   "type": "revision",
+   "label": "Revision notes"
+  },
+  {
+   "from": "editor",
+   "to": "gate_post",
+   "type": "hands_off",
+   "label": "Passed post"
+  },
+  {
+   "from": "gate_post",
+   "to": "poster",
+   "type": "approval",
+   "label": "Approved by Nicholas and Dan"
+  },
+  {
+   "from": "gate_post",
+   "to": "content",
+   "type": "revision",
+   "label": "Changes requested"
+  },
+  {
+   "from": "poster",
+   "to": "strategist",
+   "type": "data",
+   "label": "Results 24h and 7d"
+  }
+ ],
+ "content_team": {
+  "version": "v2-lean-content",
+  "updated": "2026-11-19",
+  "status": "proposal, awaiting approval",
+  "doc": "Dan Maza PA - Content Team (Lean) v2 (Drive, 00 Command Center)",
+  "schedule": [
+   {
+    "when": "1st of month 09:00 ET",
+    "step": "Monthly plan for approval"
+   },
+   {
+    "when": "Mondays",
+    "step": "Weekly briefs"
+   },
+   {
+    "when": "slot-5d",
+    "step": "Spec, copy, cut, audio"
+   },
+   {
+    "when": "slot-4d to -3d",
+    "step": "Editor review loop"
+   },
+   {
+    "when": "slot-2d",
+    "step": "Approval requests"
+   },
+   {
+    "when": "slot",
+    "step": "Publish"
+   },
+   {
+    "when": "slot+1d, +7d",
+    "step": "Results"
+   }
+  ]
+ }
+}

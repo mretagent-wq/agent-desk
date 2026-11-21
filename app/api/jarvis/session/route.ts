@@ -12,8 +12,10 @@ export const dynamic = "force-dynamic";
 export async function POST() {
   const user = await currentUser();
   if (!user) return NextResponse.json({ error: "Sign in first." }, { status: 401 });
-  const key = process.env.OPENAI_API_KEY;
+  const key = cleanKey(process.env.OPENAI_API_KEY);
   if (!key) return NextResponse.json({ error: "Jarvis isn't connected yet. Add OPENAI_API_KEY in Netlify." }, { status: 503 });
+  const shape = keyProblem(key);
+  if (shape) return NextResponse.json({ error: `Couldn't start Jarvis: ${shape}` }, { status: 503 });
 
   const session = (withTranscript: boolean) => ({
     type: "realtime",
@@ -50,4 +52,22 @@ export async function POST() {
     return NextResponse.json({ error: `Couldn't start Jarvis: ${msg}` }, { status: 502 });
   }
   return NextResponse.json({ secret: body.value, expiresAt: body.expires_at ?? null, model: JARVIS_MODEL }, { headers: { "Cache-Control": "no-store" } });
+}
+
+/** Tolerates the usual paste slips: spaces, line breaks, wrapping quotes, a leading "Bearer". */
+function cleanKey(raw: string | undefined): string {
+  let k = (raw ?? "").trim();
+  k = k.replace(/^["'\u201c\u201d\u2018\u2019]+|["'\u201c\u201d\u2018\u2019]+$/g, "").trim();
+  k = k.replace(/^bearer\s+/i, "").trim();
+  k = k.replace(/^OPENAI_API_KEY\s*=\s*/i, "").trim();
+  return k.replace(/\s+/g, "");
+}
+
+/** Describes what's wrong with the key's shape, never any of its characters. */
+function keyProblem(k: string): string | null {
+  if (k.startsWith("sk-")) return null;
+  if (k.split(".").length === 3) {
+    return "the OPENAI_API_KEY in Netlify is a sign-in token, not an API key. Create a secret key at platform.openai.com under API keys (it starts with sk-) and paste that instead.";
+  }
+  return "the OPENAI_API_KEY in Netlify isn't an OpenAI secret key. It should start with sk- and come from platform.openai.com under API keys.";
 }
